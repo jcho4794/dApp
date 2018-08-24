@@ -44,7 +44,7 @@ This is easiest way to get things running, but will require test ether ([availab
 $ make start_dapp_rinkeby
 ```
 
-### Option 2 - local test rpc
+### Option 2A - local test rpc without docker
 
 This option requires a few extra steps, but is fully localized and can be a much easier dev environment if working on transactions to the ethereum block chain.
 
@@ -69,6 +69,27 @@ At this point we should be able to run the dApp locally
 ```
 $ make start_dapp
 ```
+
+### Option 2B - local test rpc using Docker-Compose 
+
+Docker allows you to setup everything in their own isolated docker containers, preventing any changes to your working enviornment. 
+
+Simply run after installing the neccesary deps:
+```
+docker-compose up
+```
+
+If you run into the following error:
+```
+./src/Contracts.js
+Module not found: Can't resolve '../build/contracts/InitialAllocationCollateralToken' in '/app/src'
+```
+
+Run the following command in a new terminal tab
+```bash
+$ make docker_migrate
+```
+(This needs to be done only once for a set of containers)
 
 ## dApp Features
 
