@@ -67,7 +67,7 @@ class SelectTokenField extends React.Component {
 
   onSelect(symbol, exchange) {
     this.props.onSelect({
-      contractName: this.genContractName(symbol),
+      contractName: '',
       symbolName: symbol.symbol,
       quoteAsset: symbol.quoteAsset,
       oracleQuery: exchange.genOracleQuery(symbol),
@@ -78,15 +78,6 @@ class SelectTokenField extends React.Component {
       qtyMultiplier: 10 ** (18 - symbol.priceDecimalPlaces),
       oracleDataSource: 'URL'
     });
-    this.props.form.setFieldsValue({
-      contractName: this.genContractName(symbol)
-    });
-  }
-
-  genContractName(symbol) {
-    return `${this.props.exchange}_${symbol.symbol}_${
-      symbol.quoteAsset
-    }_${Date.now()}`;
   }
 
   componentDidMount() {

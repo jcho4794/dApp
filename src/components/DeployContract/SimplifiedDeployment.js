@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 import StepAnimation from '../StepAnimation';
 import {
+  ContractNameStep,
   DeployStep,
   ExpirationStep,
   ExchangeStep,
@@ -155,8 +156,18 @@ class SimplifiedDeployment extends Component {
         {...this.state}
       />,
 
-      <GasStep
+      <ContractNameStep
         key="3"
+        location={this.props.location}
+        onPrevClicked={this.toPrevStep.bind(this)}
+        onNextClicked={this.toNextStep.bind(this)}
+        updateDeploymentState={this.setState.bind(this)}
+        {...this.state}
+        {...this.props}
+      />,
+
+      <GasStep
+        key="4"
         gas={gas}
         location={this.props.location}
         onPrevClicked={this.toPrevStep.bind(this)}
@@ -168,7 +179,7 @@ class SimplifiedDeployment extends Component {
       />,
 
       <DeployStep
-        key="4"
+        key="5"
         deployContract={this.onDeployContract.bind(this)}
         showErrorMessage={showMessage.bind(showMessage, 'error')}
         showSuccessMessage={showMessage.bind(showMessage, 'success')}
@@ -200,6 +211,7 @@ class SimplifiedDeployment extends Component {
               <Step title="Exchange" />
               <Step title="Pricing" />
               <Step title="Expiration" />
+              <Step title="Name" />
               <Step title="Gas" />
               <Step network={this.props.network} title="Deploy" />
             </Steps>

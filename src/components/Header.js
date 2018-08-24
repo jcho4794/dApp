@@ -7,16 +7,17 @@ import Media from 'react-media';
 import logo from '../img/market-logo-white.png';
 import '../less/Header.less';
 
-const SubMenu = Menu.SubMenu;
+// const SubMenu = Menu.SubMenu;
 const MenuItem = Menu.Item;
 
-const subMenuItems = [
+/*const subMenuItems = [
   { name: 'Simplified Deploy', to: '/contract/deploy?mode=simplified' },
   { name: 'Guided Deploy', to: '/contract/deploy?mode=guided' },
   { name: 'Quick Deploy', to: '/contract/deploy?mode=quick' }
-];
+];*/
 
 const mainMenuItems = [
+  { name: 'Deploy Contracts', to: '/contract/deploy?mode=simplified' },
   { name: 'Explore Contracts', to: '/contract/explorer' },
   { name: 'Test Query', to: '/test' },
   {
@@ -45,13 +46,13 @@ class Header extends Component {
                   id="nav"
                   selectedKeys={[path]}
                 >
-                  <SubMenu title="Deploy Contracts">
-                    {subMenuItems.map(item => (
-                      <MenuItem key={item.to}>
-                        <Link to={item.to}>{item.name}</Link>
-                      </MenuItem>
-                    ))}
-                  </SubMenu>
+                  {/*<SubMenu title="Deploy Contracts">*/}
+                  {/*{subMenuItems.map(item => (*/}
+                  {/*<MenuItem key={item.to}>*/}
+                  {/*<Link to={item.to}>{item.name}</Link>*/}
+                  {/*</MenuItem>*/}
+                  {/*))}*/}
+                  {/*</SubMenu>*/}
                   {mainMenuItems.map(item => (
                     <MenuItem key={item.to}>
                       <Link to={item.to} target={item.target}>
@@ -67,13 +68,13 @@ class Header extends Component {
                   trigger="click"
                   content={
                     <Menu mode="inline" id="nav-mobile" selectedKeys={[path]}>
-                      <SubMenu title="Deploy Contracts">
-                        {subMenuItems.map(item => (
-                          <MenuItem key={item.to}>
-                            <Link to={item.to}>{item.name}</Link>
-                          </MenuItem>
-                        ))}
-                      </SubMenu>
+                      {/*<SubMenu title="Deploy Contracts">*/}
+                      {/*{subMenuItems.map(item => (*/}
+                      {/*<MenuItem key={item.to}>*/}
+                      {/*<Link to={item.to}>{item.name}</Link>*/}
+                      {/*</MenuItem>*/}
+                      {/*))}*/}
+                      {/*</SubMenu>*/}
                       {mainMenuItems.map(item => (
                         <MenuItem key={item.to}>
                           <Link to={item.to} target={item.target}>

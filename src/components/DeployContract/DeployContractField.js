@@ -121,7 +121,9 @@ const fieldSettingsByName = {
       }
     ],
     extra: `Name of contract should be descriptive, e.g. "ETH/BTC-20180228-Kraken"`,
-    component: () => <Input />
+    component: ({ addonBefore }) => {
+      return <Input addonBefore={addonBefore} />;
+    }
   },
 
   collateralTokenAddress: {
@@ -480,7 +482,8 @@ function DeployContractField(props) {
     onChange,
     hideLabel,
     stepValue,
-    pairs
+    pairs,
+    addonBefore
   } = props;
   const { getFieldDecorator } = form;
   const fieldSettings = fieldSettingsByName[name];
@@ -512,7 +515,8 @@ function DeployContractField(props) {
           showHint,
           onChange,
           stepValue,
-          pairs
+          pairs,
+          addonBefore
         })
       )}
     </FormItem>
