@@ -26,7 +26,7 @@ class App extends Component {
               <Content>
                 {routes.map(route => <Route key={route.path} {...route} />)}
                 <Route path='/exchange/*' render={()=> ( 
-                  <Redirect push to='/exchange' />
+                  <Redirect to='/exchange' />
                 )}/>
               </Content>
             <MarketFooter />
