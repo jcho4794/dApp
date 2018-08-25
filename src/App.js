@@ -1,6 +1,6 @@
 import { Layout } from 'antd';
 import React, { Component } from 'react';
-import { Route, Router, Redirect, Switch } from 'react-router';
+import { Route, Router, Redirect } from 'react-router';
 
 import Header from './components/Header';
 import MarketFooter from './components/MarketFooter';
@@ -21,18 +21,16 @@ class App extends Component {
   render() {
     return (
       <Router history={this.props.history}>
-        <Switch>
           <Layout style={{ minHeight: '100vh' }}>
             <Header />
-            <Content>
-              {routes.map(route => <Route key={route.path} {...route} />)}
-              <Redirect from='/exchange/*' to='/exchange' />
-            </Content>
-
+              <Content>
+                {routes.map(route => <Route key={route.path} {...route} />)}
+                <Route path='/exchange/*' render={()=> ( 
+                  <Redirect to='/exchange' />
+                )}/>
+              </Content>
             <MarketFooter />
           </Layout>
-          
-        </Switch>
       </Router>
     );
   }
