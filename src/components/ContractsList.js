@@ -1,4 +1,4 @@
-import { Col, Input, Row, Table, Select, Popover, Icon } from 'antd';
+import { Col, Input, Row, Table, Select, Popover, Icon,Pagination } from 'antd';
 import moment from 'moment';
 import React, { Component } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -7,9 +7,13 @@ import '../less/ContractsList.less';
 
 import { formatedTimeFrom } from '../util/utils';
 import Loader from './Loader';
+
+import { SpringGrid, makeResponsive } from 'react-stonecutter';
+
 import { UseWeb3Switch } from './DevComponents';
 
 const Search = Input.Search;
+const Grid = makeResponsive(SpringGrid, { maxWidth: 1300 });
 // Example Contract
 /* {
   "COLLATERAL_TOKEN": "0xa4392264a2d8c998901d10c154c91725b1bf0158",
@@ -30,7 +34,8 @@ class ContractsList extends Component {
     sort: { columnKey: 'CONTRACT_NAME', order: 'descend' },
     contracts: this.props.contracts,
     page: 1,
-    pageSize: 25,
+    pageSize: 28,
+    isGrid: true,
     selectedContractFilter: 'All Contracts',
     allContractsFilters: {
       'All Contracts': contract => contract,
@@ -59,6 +64,14 @@ class ContractsList extends Component {
     });
   }
 
+  renderExpiredTime(text) {
+    let formatedTime = formatedTimeFrom(text);
+    return formatedTime.includes('s') ? (
+      <span style={{ color: '#E41640' }}>{formatedTime}</span>
+    ) : (
+      formatedTime
+    );
+  }
   handleChange = (pagination, filters, sorter) => {
     console.log(pagination);
     this.setState({
@@ -71,6 +84,57 @@ class ContractsList extends Component {
   onInputChange = (e, searchKey) => {
     this.setState({ [searchKey]: e.target.value });
   };
+
+  onGridChange = checked => {
+    console.log('efae', checked);
+    this.setState({ isGrid: checked });
+  };
+  renderDetails(record) {
+    let rowrender = (
+      <div>
+        <Row style={{ padding: '14px' }}>
+          <Col>
+            <strong>Address </strong> {record.key}
+          </Col>
+          <Col>
+            <strong>Token </strong> {record.COLLATERAL_TOKEN_ADDRESS}
+          </Col>
+          <Col>
+            <strong>Price Cap </strong> {record.PRICE_CAP}
+          </Col>
+          <Col>
+            <strong>Price Decimal Places </strong> {record.PRICE_DECIMAL_PLACES}
+          </Col>
+          <Col>
+            <strong>Qty Multiplier </strong> {record.QTY_MULTIPLIER}
+          </Col>
+          <Col>
+            <strong>Price Floor </strong> {record.PRICE_FLOOR}
+          </Col>
+          <Col>
+            <strong>Last Price </strong> {record.lastPrice}
+          </Col>
+        </Row>
+        <CopyToClipboard text={record.ORACLE_QUERY}>
+          <button className="copyOrcaleQuery">Copy Orcale Query</button>
+        </CopyToClipboard>
+      </div>
+    );
+    return (
+      <Popover
+        overlayClassName={'contractPopOver'}
+        content={rowrender}
+        placement={'bottomLeft'}
+        trigger="click"
+      >
+        <div role="button" className="dotdotdot" tabIndex="0">
+          <span className="dot" />
+          <span className="dot" />
+          <span className="dot" />
+        </div>
+      </Popover>
+    );
+  }
 
   onSearch = (dataKey, searchKey, searchVisibleKey, filteredKey) => {
     const searchText = this.state[searchKey];
@@ -211,12 +275,7 @@ class ContractsList extends Component {
         dataIndex: 'EXPIRATION',
         width: 200,
         render: (text, row, index) => {
-          let formatedTime = formatedTimeFrom(text);
-          return formatedTime.includes('s') ? (
-            <span style={{ color: '#E41640' }}>{formatedTime}</span>
-          ) : (
-            formatedTime
-          );
+          return this.renderExpiredTime(text);
         },
         sorter: (a, b) => a.EXPIRATION - b.EXPIRATION,
         sortOrder: sort.columnKey === 'EXPIRATION' && sort.order
@@ -224,51 +283,7 @@ class ContractsList extends Component {
       {
         title: '',
         render: (text, record, index) => {
-          let rowrender = (
-            <div>
-              <Row style={{ padding: '14px' }}>
-                <Col>
-                  <strong>Address </strong> {record.key}
-                </Col>
-                <Col>
-                  <strong>Token </strong> {record.COLLATERAL_TOKEN_ADDRESS}
-                </Col>
-                <Col>
-                  <strong>Price Cap </strong> {record.PRICE_CAP}
-                </Col>
-                <Col>
-                  <strong>Price Decimal Places </strong>{' '}
-                  {record.PRICE_DECIMAL_PLACES}
-                </Col>
-                <Col>
-                  <strong>Qty Multiplier </strong> {record.QTY_MULTIPLIER}
-                </Col>
-                <Col>
-                  <strong>Price Floor </strong> {record.PRICE_FLOOR}
-                </Col>
-                <Col>
-                  <strong>Last Price </strong> {record.lastPrice}
-                </Col>
-              </Row>
-              <CopyToClipboard text={record.ORACLE_QUERY}>
-                <button className="copyOrcaleQuery">Copy Orcale Query</button>
-              </CopyToClipboard>
-            </div>
-          );
-          return (
-            <Popover
-              overlayClassName={'contractPopOver'}
-              content={rowrender}
-              placement={'bottomLeft'}
-              trigger="click"
-            >
-              <div role="button" className="dotdotdot" tabIndex="0">
-                <span className="dot" />
-                <span className="dot" />
-                <span className="dot" />
-              </div>
-            </Popover>
-          );
+          return this.renderDetails(record);
         }
       }
     ];
@@ -286,10 +301,120 @@ class ContractsList extends Component {
         // scroll={{ y: '60vh' }}
       />
     );
-    this.table = table;
+
     if (this.state.contracts.length === 0) {
       table = <div>No contracts found</div>;
     }
+    if (this.state.isGrid) {
+      table = (
+        <div>
+          <Grid
+            columns={4}
+            columnWidth={255}
+            gutterWidth={20}
+            gutterHeight={20}
+            itemHeight={246}
+            springConfig={{ stiffness: 170, damping: 26 }}
+          >
+            {this.state.contracts
+              .filter(contract => {
+                if (
+                  !this.state.filters ||
+                  Object.values(this.state.filters)[0].length === 0
+                )
+                  return true;
+                let isgood = false;
+                Object.values(this.state.filters)[0].forEach(filter => {
+                  if (contract[Object.keys(this.state.filters)[0]] === filter)
+                    isgood = true;
+                });
+                return isgood;
+              })
+              .slice(
+                this.state.pageSize * (this.state.page - 1),
+                this.state.pageSize * this.state.page
+              )
+
+              .map(contract => {
+                let symbolTextLeft = contract.CONTRACT_NAME.split('_')[0];
+                let symbolTextRight = contract.CONTRACT_NAME.split('_')[1];
+                return (
+                  <div className="gridItem" key={'contract_' + contract.key}>
+                    <div className="detailsGridContainer">
+                      {this.renderDetails(contract)}
+                    </div>
+                    <div className="assets">
+                      <div
+                        mode="single"
+                        className={
+                          'symbol' +
+                          ' symbolText-' +
+                          Math.min(10, symbolTextLeft.length)
+                        }
+                      >
+                        {symbolTextLeft}
+                      </div>
+                      <div className="topdirarrow" />
+                      <div className="bottomdirarrow" />
+                      <div
+                        mode="single"
+                        className={
+                          'symbol' +
+                          ' symbolText-' +
+                          Math.min(10, symbolTextRight.length)
+                        }
+                      >
+                        {symbolTextRight}
+                      </div>
+                    </div>
+                    <div className="gridTitle">{contract.CONTRACT_NAME}</div>
+
+                    <div className="gridRow">
+                      <span className="gridLabel">Balance </span>
+                      <span className="gridData">
+                        {contract.collateralPoolBalance}{' '}
+                      </span>
+                    </div>
+                    <div className="gridRow">
+                      <span className="gridLabel">Expires </span>
+                      <span className="gridData">
+                        {' '}
+                        {this.renderExpiredTime(contract.EXPIRATION)}{' '}
+                      </span>
+                    </div>
+                    <div className="gridRow">
+                      <span className="gridLabel"> Collateral </span>
+                      <span className="gridData">
+                        {' '}
+                        {contract.COLLATERAL_TOKEN_SYMBOL}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+          </Grid>
+          <div className="pageination-wrapper">
+            <Pagination
+              key={`pagination-3`}
+              className={`pg-pagination`}
+              onChange={(page, change) => {
+                this.setState({ page });
+                window.scrollTo(0, 0);
+              }}
+              pageSize={this.state.pageSize}
+              total={this.state.contracts.length}
+              size={this.state.contracts.length}
+              current={this.state.page}
+            />
+          </div>
+        </div>
+      );
+    }
+    let tableSwitchBgColor = this.state.isGrid ? '#181e26' : '#d8d8d8';
+    let gridSwitchBgColor = this.state.isGrid ? '#d8d8d8' : '#181e26';
+
+    let tableSwitchFillColor = this.state.isGrid ? '#d8d8d8' : '#181e26';
+    let gridSwitchFillColor = this.state.isGrid ? '#181e26' : '#d8d8d8';
 
     return (
       <div className="page contractPage" style={{ margin: '0 13%' }}>
@@ -361,6 +486,79 @@ class ContractsList extends Component {
                 </Option>
               ))}
             </Select>
+          </Col>
+          <Col>
+            <div
+              className="tableSelect"
+              role="button"
+              tabIndex="0"
+              onKeyPress={() => ''}
+              onClick={() => this.setState({ isGrid: false })}
+              style={{ backgroundColor: tableSwitchBgColor }}
+            >
+              <svg width="40" height="40" style={{ position: 'absolute' }}>
+                <rect
+                  width="20"
+                  x="10"
+                  y="12"
+                  height="3"
+                  style={{ fill: tableSwitchFillColor }}
+                />
+                <rect
+                  width="20"
+                  x="10"
+                  y="18"
+                  height="3"
+                  style={{ fill: tableSwitchFillColor }}
+                />
+                <rect
+                  width="20"
+                  x="10"
+                  y="24"
+                  height="3"
+                  style={{ fill: tableSwitchFillColor }}
+                />
+              </svg>
+            </div>
+            <div
+              className="gridSelect"
+              role="button"
+              tabIndex="0"
+              onKeyPress={() => ''}
+              style={{ backgroundColor: gridSwitchBgColor }}
+              onClick={() => this.setState({ isGrid: true })}
+            >
+              <svg width="40" height="40" style={{ position: 'absolute' }}>
+                <rect
+                  width="7"
+                  x="10"
+                  y="11"
+                  height="7"
+                  style={{ fill: gridSwitchFillColor }}
+                />
+                <rect
+                  width="7"
+                  x="19"
+                  y="11"
+                  height="7"
+                  style={{ fill: gridSwitchFillColor }}
+                />
+                <rect
+                  width="7"
+                  x="10"
+                  y="20"
+                  height="7"
+                  style={{ fill: gridSwitchFillColor }}
+                />
+                <rect
+                  width="7"
+                  x="19"
+                  y="20"
+                  height="7"
+                  style={{ fill: gridSwitchFillColor }}
+                />
+              </svg>
+            </div>
           </Col>
         </Row>
         <style
