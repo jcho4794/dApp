@@ -28,6 +28,9 @@ class Trades extends Component {
     ) {
       this.getUnallocatedCollateral(this.props);
     }
+    this.setState({
+      activeTab: 1
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -54,12 +57,29 @@ class Trades extends Component {
     }
   }
 
+  toggleColorScheme(activeKey) {
+    this.setState({
+      activeTab: activeKey
+    });
+  }
+
   render() {
     const { buys, sells, contract } = this.state;
 
     return (
-      <div id="trading" className="sim-ex-container m-top-10">
-        <Tabs defaultActiveKey="1">
+      <div
+        id="trading"
+        className={
+          'sim-ex-container m-top-10' +
+          (this.state.activeTab == 2 ? ' sell' : '')
+        }
+      >
+        <Tabs
+          defaultActiveKey="1"
+          onChange={activeKey => {
+            this.toggleColorScheme(activeKey);
+          }}
+        >
           <TabPane tab="Buy" key="1">
             <div className="sim-ex-inner-container">
               <TradeContainer
