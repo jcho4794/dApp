@@ -96,8 +96,8 @@ class HeaderMenu extends Component {
         <Col span={24}>
           <div className="available-collateral">
             <div style={{ opacity: '0.7' }}>
-              Available Collateral
-              <Tooltip title="This is your main balance">
+              Available to Deposit
+              <Tooltip title="This is the amount in your wallet that is currently available to deposit into the selected MARKET Protocol Smart Contract.">
                 <Icon type="info-circle-o" className="info-icon" />
               </Tooltip>
             </div>
@@ -112,8 +112,8 @@ class HeaderMenu extends Component {
           </div>
           <div className="unallocated-collateral">
             <h2 style={{ fontWeight: '300', opacity: '0.7', fontSize: '18px' }}>
-              Available for Trading
-              <Tooltip title="This is your collateral balance">
+              Available To Trade
+              <Tooltip title="This is the amount of collateral you have available with to trade with in the selected MARKET Protocol Smart Contract.">
                 <Icon type="info-circle-o" className="info-icon" />
               </Tooltip>
             </h2>

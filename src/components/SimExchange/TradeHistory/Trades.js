@@ -10,7 +10,7 @@ class Trades extends Component {
       <div className="sim-ex-container">
         <SectionHeader
           name="Trade History"
-          tooltip="This is the global Trading History"
+          tooltip="All transactions for the selected MARKET Protocol Smart Contract are shown here."
         />
         <Table
           dataSource={[]}

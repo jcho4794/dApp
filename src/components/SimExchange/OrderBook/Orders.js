@@ -49,7 +49,10 @@ class Orders extends Component {
   render() {
     return (
       <div className="sim-ex-container">
-        <SectionHeader name="Order Book" tooltip="This is your Order Book" />
+        <SectionHeader
+          name="Order Book"
+          tooltip="The Order Book displays all orders that are currently open and able to be filled."
+        />
         <Table
           rowKey={this.state.contract.key}
           dataSource={this.state.bids}

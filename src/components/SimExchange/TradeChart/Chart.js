@@ -8,7 +8,7 @@ class Chart extends Component {
       <div className="sim-ex-container">
         <SectionHeader
           name="Trade Charts"
-          tooltip="This is some stuff understood by the trading gurus"
+          tooltip="These charts help to visualize the current state of the market and the depth of orders."
         />
         <div className="sim-ex-inner-container">
           <p>Charts and stuff goes here</p>
