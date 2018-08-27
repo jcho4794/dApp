@@ -27,5 +27,6 @@ export const marketAPI = {
 // paths to API resources
 export const Path = {
   Contracts: '/contracts',
-  WhitelistedContracts: '/contracts/whitelist'
+  WhitelistedContracts: '/contracts/whitelist',
+  Orders: contractAddress => `/orders/${contractAddress}/`
 };

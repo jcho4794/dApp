@@ -3,6 +3,7 @@ import { Table } from 'antd';
 
 import columns from './Columns';
 import SectionHeader from '../SectionHeader';
+import { marketAPI, Path } from '../../../util/marketAPI';
 
 class Orders extends Component {
   constructor(props) {
@@ -34,19 +35,15 @@ class Orders extends Component {
   }
 
   getOrders(contractAddress) {
-    fetch(`https://dev.api.marketprotocol.io/orders/${contractAddress}/`)
-      .then(function(response) {
-        return response.json();
-      })
-      .then(
-        function(response) {
-          this.setState({
-            bids: response.bids,
-            asks: response.asks,
-            contract: response.contract
-          });
-        }.bind(this)
-      );
+    marketAPI.get(Path.Orders(contractAddress)).then(
+      function(response) {
+        this.setState({
+          bids: response.bids,
+          asks: response.asks,
+          contract: response.contract
+        });
+      }.bind(this)
+    );
   }
 
   render() {
