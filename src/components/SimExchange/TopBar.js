@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Col, Dropdown, Icon, Menu, Row } from 'antd';
+import _ from 'lodash';
 
 import Loader from '../Loader';
 import { formatedTimeFrom } from '../../util/utils';
@@ -10,7 +11,11 @@ import contractIcon from '../../img/icons/contract.svg';
 class TopBar extends Component {
   render() {
     const { contract, contracts } = this.props;
-    let validContracts = contracts;
+    let validContracts = _.filter(contracts, contract => {
+      return contract.isSettled === false;
+    });
+
+    console.log('validContracts', validContracts);
 
     const menu = (
       <Menu onClick={e => this.props.onSelectContract(e.item.props.contract)}>

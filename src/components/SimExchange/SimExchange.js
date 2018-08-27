@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Col, Row } from 'antd';
 import { withRouter } from 'react-router';
+import _ from 'lodash';
 
 import TopBar from './TopBar';
 import Trades from './Trade/Trades';
@@ -21,7 +22,11 @@ class SimExchange extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.contracts && !this.props.contract) {
-      this.props.selectContract(this.props.contracts[0]);
+      let filteredContracts = _.filter(this.props.contracts, contract => {
+        return contract.isSettled === false;
+      });
+
+      this.props.selectContract(filteredContracts[0]);
     }
   }
 
@@ -61,7 +66,7 @@ class SimExchange extends Component {
           </Col>
           <Col lg={5} xl={5}>
             <div className="column-container">
-              <OrderBook />
+              <OrderBook {...this.props} />
             </div>
           </Col>
           <Col lg={7} xl={9}>
