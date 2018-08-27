@@ -1,4 +1,4 @@
-import { Col, Checkbox, Input, Row, Table, Select, Popover, Icon } from 'antd';
+import { Col, Input, Row, Table, Select, Popover, Icon } from 'antd';
 import moment from 'moment';
 import React, { Component } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
