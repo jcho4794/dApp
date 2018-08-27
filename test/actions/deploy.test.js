@@ -39,7 +39,7 @@ describe('DeployAction', () => {
 
 
   function runDeployAction() {
-    const deployAction = deployContract(...deployParams);
+    const deployAction = deployContract(deployParams.web3, deployParams.contractSpecs);
     return deployAction(dispatchSpy);
   }
 
