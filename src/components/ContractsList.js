@@ -1,12 +1,14 @@
 import { Col, Checkbox, Input, Row, Table, Select, Popover, Icon } from 'antd';
-import { formatedTimeFrom } from '../util/utils';
+import moment from 'moment';
 import React, { Component } from 'react';
-
-import '../less/ContractsList.less';
-import Loader from './Loader';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-import moment from 'moment';
+import '../less/ContractsList.less';
+
+import { formatedTimeFrom } from '../util/utils';
+import Loader from './Loader';
+import { UseWeb3Switch } from './DevComponents';
+
 const Search = Input.Search;
 // Example Contract
 /* {
@@ -288,13 +290,7 @@ class ContractsList extends Component {
 
     return (
       <div className="page contractPage" style={{ margin: '0 13%' }}>
-        {process.env.NODE_ENV === 'development' && (
-          <Row type="flex" justify="start" style={{ padding: '0px 20px' }}>
-            <Checkbox onChange={e => this.props.onLoad(e.target.checked)}>
-              Load contracts from Web3 (Use for direct on-chain testing)
-            </Checkbox>
-          </Row>
-        )}
+        <UseWeb3Switch onChange={this.props.onLoad} />
         <Row
           type="flex"
           justify="start"

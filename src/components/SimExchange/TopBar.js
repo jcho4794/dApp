@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import Loader from '../Loader';
 import { formatedTimeFrom } from '../../util/utils';
+import { UseWeb3Switch } from '../../components/DevComponents';
 
 import volume from '../../img/icons/24hr_volume.svg';
 import contractIcon from '../../img/icons/contract.svg';

@@ -16,7 +16,9 @@ import TradeChart from './TradeChart/Chart';
 class SimExchange extends Component {
   componentDidMount() {
     if (!this.props.contracts) {
-      this.props.getContracts(false);
+      // this is set to true now because, other parts of the sim exchange
+      // is not yet setup to work with the Market API
+      this.props.getContracts(true);
     }
   }
 
@@ -55,6 +57,7 @@ class SimExchange extends Component {
             contract={contract}
             contracts={contracts}
             onSelectContract={this.props.selectContract}
+            getContracts={this.props.getContracts}
           />
         </Row>
         <Row type="flex" justify="space-between">
