@@ -1,12 +1,14 @@
 import { Col, Input, Row, Table, Select, Popover, Icon } from 'antd';
-import { formatedTimeFrom } from '../util/utils';
+import moment from 'moment';
 import React, { Component } from 'react';
-
-import '../less/ContractsList.less';
-import Loader from './Loader';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-import moment from 'moment';
+import '../less/ContractsList.less';
+
+import { formatedTimeFrom } from '../util/utils';
+import Loader from './Loader';
+import { UseWeb3Switch } from './DevComponents';
+
 const Search = Input.Search;
 // Example Contract
 /* {
@@ -40,7 +42,7 @@ class ContractsList extends Component {
 
   componentDidMount() {
     if (!this.props.contracts) {
-      this.props.onLoad();
+      this.props.onLoad(false);
     }
   }
   componentDidUpdate(prevProps) {
@@ -288,6 +290,7 @@ class ContractsList extends Component {
 
     return (
       <div className="page contractPage" style={{ margin: '0 13%' }}>
+        <UseWeb3Switch onChange={this.props.onLoad} />
         <Row
           type="flex"
           justify="start"
