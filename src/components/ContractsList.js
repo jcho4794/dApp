@@ -1,4 +1,4 @@
-import { Col, Input, Row, Table, Select, Popover, Icon } from 'antd';
+import { Col, Checkbox, Input, Row, Table, Select, Popover, Icon } from 'antd';
 import { formatedTimeFrom } from '../util/utils';
 import React, { Component } from 'react';
 
@@ -40,7 +40,7 @@ class ContractsList extends Component {
 
   componentDidMount() {
     if (!this.props.contracts) {
-      this.props.onLoad();
+      this.props.onLoad(false);
     }
   }
   componentDidUpdate(prevProps) {
@@ -288,6 +288,13 @@ class ContractsList extends Component {
 
     return (
       <div className="page contractPage" style={{ margin: '0 13%' }}>
+        {process.env.NODE_ENV === 'development' && (
+          <Row type="flex" justify="start" style={{ padding: '0px 20px' }}>
+            <Checkbox onChange={e => this.props.onLoad(e.target.checked)}>
+              Load contracts from Web3 (Use for direct on-chain testing)
+            </Checkbox>
+          </Row>
+        )}
         <Row
           type="flex"
           justify="start"

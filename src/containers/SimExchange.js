@@ -10,8 +10,12 @@ import { loadContracts } from '../actions/explorer';
 import CreateInitializer, {
   contractConstructor
 } from '../util/web3/contractInitializer';
-import { processContractsList } from '../util/contracts';
+import {
+  processContractsList,
+  processAPIContractsList
+} from '../util/contracts';
 import { selectContract } from '../actions/simExchange';
+import { marketAPI } from '../util/marketAPI';
 
 const mapStateToProps = state => ({
   contracts: state.explorer.contracts,
@@ -23,37 +27,43 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getContracts: () => {
+  getContracts: fromWeb3 => {
     const web3 = store.getState().web3.web3Instance;
-    const initializeContracts = CreateInitializer(
-      contractConstructor.bind(null, web3)
+    const contracts = CreateInitializer(contractConstructor.bind(null, web3))(
+      Contracts
     );
 
-    const contracts = initializeContracts(Contracts);
+    const loadContractParams = {
+      processContracts: processAPIContractsList,
+      marketAPI
+    };
 
-    const processContracts = processContractsList.bind(
-      null,
-      contracts.MarketContract,
-      contracts.MarketCollateralPool,
-      contracts.CollateralToken,
-      contracts.ERC20
-    );
+    if (fromWeb3) {
+      loadContractParams.web3 = web3;
+      loadContractParams.processContracts = processContractsList.bind(
+        null,
+        contracts.MarketContract,
+        contracts.MarketCollateralPool,
+        contracts.CollateralToken,
+        contracts.ERC20
+      );
+    }
 
     dispatch(
-      loadContracts(
-        { web3, processContracts },
-        {
-          MarketContractRegistry: contracts.MarketContractRegistry,
-          CollateralToken: contracts.CollateralToken
-        }
-      )
+      loadContracts(loadContractParams, {
+        MarketContractRegistry: contracts.MarketContractRegistry,
+        CollateralToken: contracts.CollateralToken
+      })
     );
   },
   selectContract: contract => dispatch(selectContract({ contract }))
 });
 
 const SimExchange = withGAPageView(
-  connect(mapStateToProps, mapDispatchToProps)(SimExchangeComponent)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(SimExchangeComponent)
 );
 
 export default SimExchange;
