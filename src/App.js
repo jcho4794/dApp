@@ -1,11 +1,11 @@
 import { Layout } from 'antd';
 import React, { Component } from 'react';
-import { Route, Router } from 'react-router';
+import { Route, Router, Redirect } from 'react-router';
 
 import Header from './components/Header';
 import MarketFooter from './components/MarketFooter';
 
-import { routes } from './routes';
+import { redirects, routes } from './routes';
 
 import './less/App.less';
 
@@ -21,14 +21,17 @@ class App extends Component {
   render() {
     return (
       <Router history={this.props.history}>
-        <Layout style={{ minHeight: '100vh' }}>
-          <Header />
-          <Content>
-            {routes.map(route => <Route key={route.path} {...route} />)}
-          </Content>
-
-          <MarketFooter />
-        </Layout>
+          <Layout style={{ minHeight: '100vh' }}>
+            <Header />
+              <Content>
+                {routes.map(route => <Route key={route.path} {...route} />)}
+                {redirects.map(redirect => (<Route path={redirect.from} render={ () => (
+                  <Redirect to={redirect.to} />
+                )}/> 
+                ))}
+              </Content>
+            <MarketFooter />
+          </Layout>
       </Router>
     );
   }

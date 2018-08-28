@@ -23,3 +23,10 @@ export const routes = [
     path: '/test'
   }
 ];
+
+export const redirects = [
+{
+  from: '/exchange/*',
+  to: '/exchange'
+}
+];
