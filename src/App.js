@@ -5,7 +5,7 @@ import { Route, Router, Redirect } from 'react-router';
 import Header from './components/Header';
 import MarketFooter from './components/MarketFooter';
 
-import { routes } from './routes';
+import { redirects, routes } from './routes';
 
 import './less/App.less';
 
@@ -25,9 +25,10 @@ class App extends Component {
             <Header />
               <Content>
                 {routes.map(route => <Route key={route.path} {...route} />)}
-                <Route path='/exchange/*' render={ () => ( 
-                  <Redirect to='/exchange' />
-                )}/>
+                {redirects.map(redirect => (<Route path={redirect.from} render={ () => (
+                  <Redirect to={redirect.to} />
+                )}/> 
+                ))}
               </Content>
             <MarketFooter />
           </Layout>
