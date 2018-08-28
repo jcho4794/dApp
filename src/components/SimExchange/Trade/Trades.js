@@ -64,8 +64,7 @@ class Trades extends Component {
       <div
         id="trading"
         className={
-          'sim-ex-container m-top-10' +
-          (this.state.activeTab == 2 ? ' sell' : '')
+          'sim-ex-container m-top-10' + (this.state.activeTab === 2 && ' sell')
         }
       >
         <Tabs
