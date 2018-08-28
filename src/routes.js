@@ -25,8 +25,8 @@ export const routes = [
 ];
 
 export const redirects = [
-{
-  from: '/exchange/*',
-  to: '/exchange'
-}
+  {
+    from: '/exchange/*',
+    to: '/exchange'
+  }
 ];

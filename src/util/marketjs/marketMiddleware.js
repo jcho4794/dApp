@@ -19,7 +19,7 @@ import { Utils } from '@marketprotocol/marketjs';
 
 /**
  * @param orderData user inputed order data object {qty, price, expirationTimestamp}
- * @returns {object} signed order hash
+ * @returns Promise<SignedOrder>
  **/
 const createSignedOrderAsync = (orderData, str = store) => {
   const { marketjs, simExchange, web3 } = str.getState();
@@ -47,7 +47,7 @@ const createSignedOrderAsync = (orderData, str = store) => {
 
 /**
  * @param amount the amount of collateral tokens you want to deposit
- * @returns boolean
+ * @returns Promise<Boolean>
  **/
 const depositCollateralAsync = (amount, str = store) => {
   const { simExchange, marketjs } = str.getState();
@@ -95,6 +95,64 @@ const depositCollateralAsync = (amount, str = store) => {
   });
 };
 
+/**
+ * @param tokenAddress ERC20 token address
+ * @param toString boolean - converts return value to string instead of BigNumber
+ * @returns Promise<String or BigNumber>
+ **/
+const getBalanceAsync = (tokenAddress, toString, str = store) => {
+  const marketjs = str.getState().marketjs;
+  const web3 = str.getState().web3.web3Instance;
+
+  return marketjs.getBalanceAsync(tokenAddress, web3.eth.coinbase).then(res => {
+    switch (toString) {
+      case true:
+        const tokenBalance = web3.fromWei(res.toFixed(), 'ether').toString();
+
+        return tokenBalance;
+      default:
+        return res;
+    }
+  });
+};
+
+/**
+ * @param marketContractAddress the address for the MARKET contract
+ * @param fromBlock starting block number(default: 0)
+ * @param toBlock ending block number(defualt: latest)
+ * @param userAddress users wallet address filter(default: null)
+ * @param side maker, taker, or any(default: any)
+ * @returns Promise<OrderFilledEvent[]>
+ **/
+const getContractFillsAsync = (
+  marketContractAddress,
+  fromBlock = 0,
+  toBlock = 'latest',
+  userAddress = null,
+  side = 'any',
+  str = store
+) => {
+  const { marketjs } = str.getState();
+
+  return marketjs
+    .getContractFillsAsync(
+      marketContractAddress,
+      fromBlock,
+      toBlock,
+      userAddress,
+      side
+    )
+    .then(fills => {
+      console.log('fills', fills);
+      return fills;
+    });
+};
+
+/**
+ * @param contract MARKET contract object
+ * @param toString boolean that returns the value as a string
+ * @returns Promise<BigNumber|null>
+ **/
 const getUserUnallocatedCollateralBalanceAsync = (
   contract,
   toString,
@@ -119,6 +177,10 @@ const getUserUnallocatedCollateralBalanceAsync = (
     });
 };
 
+/**
+ * @param signedOrderJSON A signed order JSON object string
+ * @returns Promise<OrderTransactionInfo>
+ **/
 const tradeOrderAsync = (signedOrderJSON, str = store) => {
   const { marketjs } = str.getState();
   const web3 = str.getState().web3.web3Instance;
@@ -150,7 +212,7 @@ const tradeOrderAsync = (signedOrderJSON, str = store) => {
 
 /**
  * @param amount the amount of collateral tokens you want to deposit
- * @returns boolean
+ * @returns Promise<Boolean>
  **/
 const withdrawCollateralAsync = (amount, str = store) => {
   const { simExchange, marketjs } = str.getState();
@@ -183,27 +245,12 @@ const withdrawCollateralAsync = (amount, str = store) => {
   });
 };
 
-const getBalanceAsync = (tokenAddress, toString, str = store) => {
-  const marketjs = str.getState().marketjs;
-  const web3 = str.getState().web3.web3Instance;
-
-  return marketjs.getBalanceAsync(tokenAddress, web3.eth.coinbase).then(res => {
-    switch (toString) {
-      case true:
-        const tokenBalance = web3.fromWei(res.toFixed(), 'ether').toString();
-
-        return tokenBalance;
-      default:
-        return res;
-    }
-  });
-};
-
 export const MarketJS = {
   createSignedOrderAsync,
   depositCollateralAsync,
+  getBalanceAsync,
+  getContractFillsAsync,
   getUserUnallocatedCollateralBalanceAsync,
   tradeOrderAsync,
-  withdrawCollateralAsync,
-  getBalanceAsync
+  withdrawCollateralAsync
 };
