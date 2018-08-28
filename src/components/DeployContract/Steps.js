@@ -6,6 +6,8 @@ import { Button, Form, Icon, Steps, Input, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import BigNumber from 'bignumber.js';
+
 import { Utils } from '@marketprotocol/marketjs';
 
 import Field, { FieldSettings } from './DeployContractField';
@@ -65,7 +67,7 @@ class BaseStepComponent extends Component {
           symbolName,
           quoteAsset,
           exchangeApi,
-          expirationTimeStamp,
+          new BigNumber(expirationTimeStamp),
           fieldsValue.contractName
         );
       }
@@ -960,7 +962,7 @@ class ContractNameStep extends BaseStepComponent {
       symbolName,
       quoteAsset,
       exchangeApi,
-      expirationTimeStamp,
+      new BigNumber(expirationTimeStamp),
       name
     );
   };
