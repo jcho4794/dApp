@@ -12,13 +12,12 @@ class HeaderMenu extends Component {
     this.showModal = this.showModal.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleOk = this.handleOk.bind(this);
-    this.getBalances = this.getBalances.bind(this);
 
     this.state = {
       amount: {},
       transaction: {},
-      unallocatedCollateral: 0,
-      availableCollateral: 0
+      unallocatedCollateral: this.props.unallocatedCollateral,
+      availableCollateral: this.props.availableCollateral
     };
   }
 
@@ -29,16 +28,17 @@ class HeaderMenu extends Component {
 
   componentDidUpdate(prevProps) {
     if (
-      this.props.simExchange.contract !== prevProps.simExchange.contract &&
-      this.props.simExchange.contract !== null
-    ) {
-      this.getBalances(this.props);
+      this.state.unallocatedCollateral !== prevProps.unallocatedCollateral ||
+      this.state.availableCollateral !== prevProps.availableCollateral
+    )
+    {
+      this.setState({
+        unallocatedCollateral: prevProps.unallocatedCollateral,
+        availableCollateral: prevProps.availableCollateral
+      });
     }
   }
 
-  componentDidMount() {
-    this.props.simExchange.contract && this.getBalances(this.props);
-  }
 
   onSubmit(amount) {
     this.setState({ amount });
@@ -67,24 +67,7 @@ class HeaderMenu extends Component {
     }
   }
 
-  async getBalances(props) {
-    const { simExchange } = props;
 
-    await MarketJS.getUserUnallocatedCollateralBalanceAsync(
-      simExchange.contract,
-      true
-    ).then(balance => {
-      this.setState({
-        unallocatedCollateral: balance
-      });
-    });
-    await MarketJS.getBalanceAsync(
-      simExchange.contract.COLLATERAL_TOKEN_ADDRESS,
-      true
-    ).then(availableCollateral => {
-      this.setState({ availableCollateral });
-    });
-  }
 
   render() {
     const { amount } = this.state;

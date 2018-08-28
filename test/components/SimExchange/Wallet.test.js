@@ -52,11 +52,49 @@ function mockedCoinbaseWeb3(
 }
 
 describe('Wallet', () => {
+  let props;
+  beforeEach(() => {
+    props = {
+      simExchange: {
+        contract: ''
+      }
+    };
+  });
+
   it('renders wallet', () => {
-    const wallet = shallow(<Wallet />);
+    const wallet = shallow(<Wallet {...props}/>);
 
     expect(wallet.containsMatchingElement(<HeaderMenu />)).to.equal(true);
     expect(wallet.containsMatchingElement(<Table />)).to.equal(true);
+  });
+  it('should toggle', () => {
+    const wallet = shallow(<Wallet {...props}/>);
+    wallet.setState({  walletCollapsed: false });
+    let spy = sinon.spy(wallet.instance(), 'onToggle');
+    wallet.update();
+
+    wallet.instance().onToggle();
+    expect(wallet.state('walletCollapsed')).to.equal(true);
+    wallet.update();
+
+    expect(wallet.containsMatchingElement(<HeaderMenu />)).to.equal(false);
+    expect(spy.called).to.equal(true);
+  });
+  it('should getBalances when a contract is selected', () => {
+    const wallet = mount(<Wallet {...props}/>);
+    sinon
+      .stub(MarketJS, 'getUserUnallocatedCollateralBalanceAsync')
+      .resolves('1000000000000000');
+    let spy = sinon.spy(wallet.instance(), 'getBalances');
+    wallet.update();
+
+    wallet.setProps({
+      simExchange: {
+        contract: mockContract
+      }
+    });
+
+    expect(spy.called).to.equal(true);
   });
 });
 
@@ -90,6 +128,8 @@ describe('HeaderMenu', () => {
         type: 'deposit',
         value: '1'
       },
+      unallocatedCollateral: 5000,
+      availableCollateral: 7000,
       simExchange: {
         contract: ''
       },
@@ -121,22 +161,6 @@ describe('HeaderMenu', () => {
   it('should have a input field to accept deposits/withdraw', () => {
     form = headerMenu.find('.deposit-withdraw-form');
     expect(form.find(Input).length).to.equal(1);
-  });
-
-  it('should getBalances when a contract is selected', () => {
-    sinon
-      .stub(MarketJS, 'getUserUnallocatedCollateralBalanceAsync')
-      .resolves('1000000000000000');
-    let spy = sinon.spy(headerMenu.instance(), 'getBalances');
-    headerMenu.update();
-
-    headerMenu.setProps({
-      simExchange: {
-        contract: mockContract
-      }
-    });
-
-    expect(spy.called).to.equal(true);
   });
 
   it('should update amount and submit request', () => {
