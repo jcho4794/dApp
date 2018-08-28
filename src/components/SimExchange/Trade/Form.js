@@ -124,11 +124,11 @@ class BuyForm extends Component {
                 showTime
                 disabledDate={current => {
                   const now = moment().startOf('day');
-                  return (
-                    current &&
-                    (current.valueOf() < moment().endOf('day') ||
-                      current.diff(now, 'days') > 60)
-                  );
+                  return (current && (current.valueOf() < now || current.diff(now, 'days') > 60));
+                }}
+                onChange={selectedDate => {
+                  const now = moment();
+                  return (selectedDate && selectedDate.isSameOrBefore(now) ? selectedDate.set(now.toObject()).add(60, 'm') : selectedDate);
                 }}
                 disabled={this.props.simExchange.contract === null}
                 showToday={false}

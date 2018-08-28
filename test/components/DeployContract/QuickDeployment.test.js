@@ -119,7 +119,7 @@ describe('QuickDeployment', () => {
     expect(overlay).to.have.length(0);
   });
 
-  it('should disable past dates in expiration date picker', () => {
+  it('should disable past dates in expiration date picker, but allow current date', () => {
     const pastDate = moment()
       .subtract(1, 'days')
       .format('MMMM D, YYYY');
@@ -144,7 +144,7 @@ describe('QuickDeployment', () => {
         .find(`td[title="${currentDate}"]`)
         .find('.ant-calendar-date')
         .prop('aria-disabled')
-    ).to.equal(true);
+    ).to.equal(false);
 
     expect(
       quickDeployment
@@ -153,6 +153,24 @@ describe('QuickDeployment', () => {
         .find('.ant-calendar-date')
         .prop('aria-disabled')
     ).to.equal(false);
+  });
+
+  it('should add 60 minutes to the time when the current date is selected', () => {
+    const dateSelected = moment().format('MMMM D, YYYY');
+    const currentDateFormated = moment().add(60, 'm').format('YYYY-MM-DD HH:mm:ss');
+
+    quickDeployment.find('span#expirationTimeStamp input').simulate('click');
+
+    quickDeployment
+      .find('span#expirationTimeStamp')
+      .find(`td[title="${dateSelected}"]`)
+      .simulate('click');
+
+    // Do to there being a little bit of lag from the moment the simulated click happens and the dateSelected
+    // variable receives it's value, we will expect the time to be valid up to the minute instead of second
+    expect(
+      moment(quickDeployment.find('.ant-calendar-picker-input').prop('value')).format("HH:mm")
+    ).to.equal(moment(currentDateFormated).format('HH:mm'));
   });
 
   /*it('should disable dates more than 60 from today in expiration date picker', () => {
@@ -192,13 +210,8 @@ describe('QuickDeployment', () => {
   });*/
 
   it('should format the local date with utc', () => {
-    const dateSelected = moment()
-      .add(2, 'days')
-      .format('MMMM D, YYYY');
-
-    const dateFormated = moment()
-      .add(2, 'days')
-      .format('YYYY-MM-DD HH:mm:ss');
+    const dateSelected = moment().add(2, 'days').format('MMMM D, YYYY');
+    const dateFormated = moment().add(2, 'days').format('YYYY-MM-DD HH:mm:ss');
 
     quickDeployment.find('span#expirationTimeStamp input').simulate('click');
 
@@ -207,9 +220,11 @@ describe('QuickDeployment', () => {
       .find(`td[title="${dateSelected}"]`)
       .simulate('click');
 
+    // Do to there being a little bit of lag from the moment the simulated click happens and the dateSelected
+    // variable receives it's value, we will expect the time to be valid up to the minute instead of second
     expect(
-      quickDeployment.find('.ant-calendar-picker-input').prop('value')
-    ).to.equal(dateFormated);
+      moment(quickDeployment.find('.ant-calendar-picker-input').prop('value')).format("YYYY-MM-DD HH:mm")
+    ).to.equal(moment(dateFormated).format("YYYY-MM-DD HH:mm"));
   });
 
   it('should call onDeployContract with form values when submitted', () => {
