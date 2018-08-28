@@ -21,17 +21,20 @@ class App extends Component {
   render() {
     return (
       <Router history={this.props.history}>
-          <Layout style={{ minHeight: '100vh' }}>
-            <Header />
-              <Content>
-                {routes.map(route => <Route key={route.path} {...route} />)}
-                {redirects.map(redirect => (<Route path={redirect.from} render={ () => (
-                  <Redirect to={redirect.to} />
-                )}/> 
-                ))}
-              </Content>
-            <MarketFooter />
-          </Layout>
+        <Layout style={{ minHeight: '100vh' }}>
+          <Header />
+          <Content>
+            {routes.map(route => <Route key={route.path} {...route} />)}
+            {redirects.map(redirect => (
+              <Route
+                key={redirect.from}
+                path={redirect.from}
+                render={() => <Redirect to={redirect.to} />}
+              />
+            ))}
+          </Content>
+          <MarketFooter />
+        </Layout>
       </Router>
     );
   }
