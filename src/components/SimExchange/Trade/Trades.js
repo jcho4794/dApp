@@ -57,12 +57,6 @@ class Trades extends Component {
     }
   }
 
-  toggleColorScheme(activeKey) {
-    this.setState({
-      activeTab: activeKey
-    });
-  }
-
   render() {
     const { buys, sells, contract } = this.state;
 
@@ -71,14 +65,12 @@ class Trades extends Component {
         id="trading"
         className={
           'sim-ex-container m-top-10' +
-          (this.state.activeTab == 2 ? ' sell' : '')
+          (this.state.activeTab === '2' ? ' sell' : '')
         }
       >
         <Tabs
           defaultActiveKey="1"
-          onChange={activeKey => {
-            this.toggleColorScheme(activeKey);
-          }}
+          onChange={activeTab => this.setState({ activeTab })}
         >
           <TabPane tab="Buy" key="1">
             <div className="sim-ex-inner-container">
