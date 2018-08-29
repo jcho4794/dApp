@@ -87,8 +87,21 @@ describe('marketMiddleware', () => {
     });
   });
 
-  describe('depositCollateralAsync', () => {
-    it('should deposit availlableCollateral to a MARKET contract', () => {});
+  describe('getBalanceAsync', () => {
+    it('should get token balance', () => {
+      mockStore.getState().marketjs.then(marketjs => {
+        const spy = sinon.spy(MarketJS, 'getBalanceAsync');
+        const marketStub = sinon.stub(marketjs, 'getBalanceAsync');
+
+        const balance = new BigNumber(1);
+
+        marketStub.returns(balance);
+
+        MarketJS.getBalanceAsync(mockContract.contract.key, true, mockStore);
+
+        expect(spy.alwaysReturned(balance)).to.equal(true);
+      });
+    });
   });
 
   describe('getUserPositionsAsync', () => {
@@ -98,11 +111,7 @@ describe('marketMiddleware', () => {
 
         let marketStub = sinon.stub(marketjs, 'getUserPositionsAsync');
 
-        marketStub.resolves(
-          new Promise(resolve => {
-            resolve([new BigNumber(1), new BigNumber(2)]);
-          })
-        );
+        marketStub.returns([new BigNumber(1), new BigNumber(2)]);
 
         await MarketJS.getUserPositionsAsync(
           mockContract.contract.key,
@@ -133,17 +142,14 @@ describe('marketMiddleware', () => {
 
         let marketStub = sinon.stub(marketjs, 'getContractFillsAsync');
 
-        marketStub.resolves(
-          new Promise(resolve => {
-            resolve(fakeFillsResponse);
-          })
-        );
+        marketStub.returns(fakeFillsResponse);
 
-        await MarketJS.getUserPositionsAsync(
+        await MarketJS.getContractFillsAsync(
           mockContract.contract.key,
-          web3.eth.coinbase,
-          true,
-          true,
+          0,
+          'latest',
+          null,
+          'any',
           mockStore
         );
 
@@ -161,14 +167,11 @@ describe('marketMiddleware', () => {
         );
         let marketStub = sinon.stub(
           marketjs,
-          'getUserUnallocatedCollateralBalanceAsync'
+          'getUserUnallocatedCollateralBalanceAsync',
+          spy
         );
 
-        marketStub.resolves(
-          new Promise(resolve => {
-            resolve('1.000000000000000000');
-          })
-        );
+        marketStub.returns('1.000000000000000000');
 
         await MarketJS.getUserUnallocatedCollateralBalanceAsync(
           mockContract.contract,
@@ -187,20 +190,12 @@ describe('marketMiddleware', () => {
         const spy = sinon.spy(MarketJS, 'tradeOrderAsync');
         const marketStub = sinon.stub(marketjs, 'tradeOrderAsync');
 
-        marketStub.resolves(
-          new Promise(resolve => {
-            resolve(orderTransactionInfo);
-          })
-        );
+        marketStub.returns(orderTransactionInfo);
 
         MarketJS.tradeOrderAsync(signedOrderJSON, mockStore);
 
         expect(spy.alwaysReturned(orderTransactionInfo)).to.equal(true);
       });
     });
-  });
-
-  describe('withdrawCollateralAsync', () => {
-    it('should withdraw unallocatedCollateral from a MARKET contract', () => {});
   });
 });

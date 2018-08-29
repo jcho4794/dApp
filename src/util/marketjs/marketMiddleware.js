@@ -134,17 +134,13 @@ const getContractFillsAsync = (
 ) => {
   const { marketjs } = str.getState();
 
-  return marketjs
-    .getContractFillsAsync(
-      marketContractAddress,
-      fromBlock,
-      toBlock,
-      userAddress,
-      side
-    )
-    .then(fills => {
-      return fills;
-    });
+  return marketjs.getContractFillsAsync(
+    marketContractAddress,
+    fromBlock,
+    toBlock,
+    userAddress,
+    side
+  );
 };
 /**
  * @param marketContractAddress MARKET contract address(key)
@@ -162,16 +158,12 @@ const getUserPositionsAsync = (
 ) => {
   const { marketjs } = str.getState();
 
-  return marketjs
-    .getUserPositionsAsync(
-      marketContractAddress,
-      userAddress,
-      sort,
-      consolidate
-    )
-    .then(userPositions => {
-      return userPositions;
-    });
+  return marketjs.getUserPositionsAsync(
+    marketContractAddress,
+    userAddress,
+    sort,
+    consolidate
+  );
 };
 
 /**
@@ -227,11 +219,7 @@ const tradeOrderAsync = (signedOrderJSON, str = store) => {
   signedOrder.takerFee = new BigNumber(signedOrder.takerFee);
   signedOrder.salt = new BigNumber(signedOrder.salt);
 
-  return marketjs
-    .tradeOrderAsync(signedOrder, signedOrder.orderQty, txParams)
-    .then(res => {
-      return res;
-    });
+  return marketjs.tradeOrderAsync(signedOrder, signedOrder.orderQty, txParams);
 };
 
 /**
