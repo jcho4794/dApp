@@ -30,15 +30,13 @@ class HeaderMenu extends Component {
     if (
       this.state.unallocatedCollateral !== prevProps.unallocatedCollateral ||
       this.state.availableCollateral !== prevProps.availableCollateral
-    )
-    {
+    ) {
       this.setState({
         unallocatedCollateral: prevProps.unallocatedCollateral,
         availableCollateral: prevProps.availableCollateral
       });
     }
   }
-
 
   onSubmit(amount) {
     this.setState({ amount });
@@ -67,8 +65,6 @@ class HeaderMenu extends Component {
     }
   }
 
-
-
   render() {
     const { amount } = this.state;
     const { simExchange } = this.props;
@@ -84,18 +80,31 @@ class HeaderMenu extends Component {
                 <Icon type="info-circle-o" className="info-icon" />
               </Tooltip>
             </div>
-            <div style={{ fontWeight: '600' }}>
-              {contract && (
-                <span>
-                  {this.state.availableCollateral}{' '}
+            {contract && (
+              <div
+                style={{ fontWeight: '500', opacity: '0.7', cursor: 'pointer' }}
+              >
+                <Tooltip
+                  title={
+                    this.state.availableCollateral +
+                    ' ' +
+                    contract.COLLATERAL_TOKEN_SYMBOL
+                  }
+                >
+                  {this.state.availableCollateral
+                    .toString()
+                    .slice(
+                      0,
+                      this.state.availableCollateral.toString().indexOf('.') + 3
+                    )}{' '}
                   {contract.COLLATERAL_TOKEN_SYMBOL}
-                </span>
-              )}
-            </div>
+                </Tooltip>
+              </div>
+            )}
           </div>
           <div className="unallocated-collateral">
             <h2 style={{ fontWeight: '300', opacity: '0.7', fontSize: '18px' }}>
-              Available To Trade
+              Available to Trade
               <Tooltip title="This is the amount of collateral you have available with to trade with in the selected MARKET Protocol Smart Contract.">
                 <Icon type="info-circle-o" className="info-icon" />
               </Tooltip>
