@@ -143,7 +143,6 @@ const getContractFillsAsync = (
       side
     )
     .then(fills => {
-      console.log('fills', fills);
       return fills;
     });
 };
