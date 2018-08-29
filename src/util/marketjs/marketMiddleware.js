@@ -134,17 +134,36 @@ const getContractFillsAsync = (
 ) => {
   const { marketjs } = str.getState();
 
-  return marketjs
-    .getContractFillsAsync(
-      marketContractAddress,
-      fromBlock,
-      toBlock,
-      userAddress,
-      side
-    )
-    .then(fills => {
-      return fills;
-    });
+  return marketjs.getContractFillsAsync(
+    marketContractAddress,
+    fromBlock,
+    toBlock,
+    userAddress,
+    side
+  );
+};
+/**
+ * @param marketContractAddress MARKET contract address(key)
+ * @param userAddress users wallet address
+ * @param sort boolean to sort by price
+ * @param consolidate consolidate positions based on their price
+ * @returns Promise<BigNumber[][]>
+ **/
+const getUserPositionsAsync = (
+  marketContractAddress,
+  userAddress,
+  sort,
+  consolidate,
+  str = store
+) => {
+  const { marketjs } = str.getState();
+
+  return marketjs.getUserPositionsAsync(
+    marketContractAddress,
+    userAddress,
+    sort,
+    consolidate
+  );
 };
 
 /**
@@ -189,10 +208,10 @@ const tradeOrderAsync = (signedOrderJSON, str = store) => {
     from: web3.eth.coinbase,
     gas: 400000
   };
+
   signedOrder.expirationTimestamp = new BigNumber(
     signedOrder.expirationTimestamp
   );
-
   signedOrder.makerFee = new BigNumber(signedOrder.makerFee);
   signedOrder.orderQty = new BigNumber(signedOrder.orderQty);
   signedOrder.price = new BigNumber(signedOrder.price);
@@ -200,13 +219,7 @@ const tradeOrderAsync = (signedOrderJSON, str = store) => {
   signedOrder.takerFee = new BigNumber(signedOrder.takerFee);
   signedOrder.salt = new BigNumber(signedOrder.salt);
 
-  console.log('signedOrderJSON', signedOrder);
-
-  return marketjs
-    .tradeOrderAsync(signedOrder, signedOrder.orderQty, txParams)
-    .then(res => {
-      return res;
-    });
+  return marketjs.tradeOrderAsync(signedOrder, signedOrder.orderQty, txParams);
 };
 
 /**
@@ -249,6 +262,7 @@ export const MarketJS = {
   depositCollateralAsync,
   getBalanceAsync,
   getContractFillsAsync,
+  getUserPositionsAsync,
   getUserUnallocatedCollateralBalanceAsync,
   tradeOrderAsync,
   withdrawCollateralAsync

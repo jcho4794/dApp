@@ -23,7 +23,7 @@ class Index extends Component {
             }
             key="1"
           >
-            <OpenOrders />
+            <OpenOrders {...this.props} />
           </TabPane>
           <TabPane
             tab={
@@ -36,7 +36,7 @@ class Index extends Component {
             }
             key="2"
           >
-            <Positions />
+            <Positions {...this.props} />
           </TabPane>
           <TabPane
             tab={
