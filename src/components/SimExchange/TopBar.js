@@ -15,8 +15,6 @@ class TopBar extends Component {
       return contract.isSettled === false;
     });
 
-    console.log('validContracts', validContracts);
-
     const menu = (
       <Menu onClick={e => this.props.onSelectContract(e.item.props.contract)}>
         {validContracts &&

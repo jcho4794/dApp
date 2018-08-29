@@ -75,7 +75,9 @@ class ContractsList extends Component {
   onSearch = (dataKey, searchKey, searchVisibleKey, filteredKey) => {
     const searchText = this.state[searchKey];
     const reg = new RegExp(searchText, 'gi');
+
     this.resetSearchFilter();
+
     let newContracts = this.props.contracts
       .map(record => {
         const match = record[dataKey].match(reg);
@@ -89,6 +91,7 @@ class ContractsList extends Component {
       .filter(
         this.state.allContractsFilters[this.state.selectedContractFilter]
       );
+
     this.setState({
       [searchVisibleKey]: false,
       [filteredKey]: !!searchText,

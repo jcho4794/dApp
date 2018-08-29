@@ -80,7 +80,7 @@ class SimExchange extends Component {
           </Col>
           <Col lg={6} xl={5}>
             <div className="column-container" style={{ paddingRight: '0' }}>
-              <TradeHistory />
+              <TradeHistory {...this.props} />
             </div>
           </Col>
         </Row>
