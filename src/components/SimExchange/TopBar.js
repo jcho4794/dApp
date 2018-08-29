@@ -32,7 +32,7 @@ class TopBar extends Component {
       <div style={{ width: '100%' }}>
         {contracts && (
           <Row type="flex" justify="space-between">
-            <Col lg={6} xl={5}>
+            <Col lg={8} xl={8} md={12} sm={16}>
               <img alt="contract" src={contractIcon} />
               <Dropdown overlay={menu}>
                 <Button>
