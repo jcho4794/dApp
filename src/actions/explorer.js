@@ -86,7 +86,7 @@ function loadContractsFromAPI(
   reject
 ) {
   marketAPI
-    .get(Path.WhitelistedContracts)
+    .get(Path.Contracts, { query: { whitelist: 1 } })
     .then(processContracts)
     .then(processedContracts => {
       dispatch({ type: `${type}_FULFILLED`, payload: processedContracts });
