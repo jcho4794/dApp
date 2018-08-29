@@ -188,7 +188,7 @@ const tradeOrderAsync = (signedOrderJSON, str = store) => {
 
   const txParams = {
     from: web3.eth.coinbase,
-    gas: 40000
+    gas: 400000
   };
   signedOrder.expirationTimestamp = new BigNumber(
     signedOrder.expirationTimestamp

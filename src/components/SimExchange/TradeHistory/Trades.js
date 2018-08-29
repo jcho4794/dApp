@@ -23,6 +23,8 @@ class Trades extends Component {
       (prevProps.simExchange.contract === null ||
         prevProps.simExchange.contract.key !== simExchange.contract.key)
     ) {
+      console.log('simExchange', simExchange, 'prevProps', prevProps);
+
       await MarketJS.getContractFillsAsync(simExchange.contract.key).then(
         res => {
           console.log('getContractFillsAsync', res);
