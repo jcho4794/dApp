@@ -3,7 +3,6 @@ import Web3 from 'web3';
 import FakeProvider from 'web3-fake-provider';
 import configureStore from 'redux-mock-store';
 import sinon from 'sinon';
-import moment from 'moment';
 import BigNumber from 'bignumber.js';
 
 import initializeMarket from '../../../src/util/marketjs/initializeMarket';
@@ -92,6 +91,67 @@ describe('marketMiddleware', () => {
     it('should deposit availlableCollateral to a MARKET contract', () => {});
   });
 
+  describe('getUserPositionsAsync', () => {
+    it('should return a users open positions for a specific MARKET contract', () => {
+      mockStore.getState().marketjs.then(async marketjs => {
+        let spy = sinon.spy(MarketJS, 'getUserPositionsAsync');
+
+        let marketStub = sinon.stub(marketjs, 'getUserPositionsAsync');
+
+        marketStub.resolves(
+          new Promise(resolve => {
+            resolve([new BigNumber(1), new BigNumber(2)]);
+          })
+        );
+
+        await MarketJS.getUserPositionsAsync(
+          mockContract.contract.key,
+          web3.eth.coinbase,
+          true,
+          true,
+          mockStore
+        );
+
+        expect(
+          spy.alwaysReturned([new BigNumber(1), new BigNumber(2)])
+        ).to.equal(true);
+      });
+    });
+  });
+
+  describe('getContractFillsAsync', () => {
+    it('should return all fills for a MARKET contract', () => {
+      mockStore.getState().marketjs.then(async marketjs => {
+        let spy = sinon.spy(MarketJS, 'getContractFillsAsync');
+
+        const fakeFillsResponse = [
+          {
+            blockNumber: 2864120,
+            feeRecipient: '0x0x0000000000000000000000000000000000000000'
+          }
+        ];
+
+        let marketStub = sinon.stub(marketjs, 'getContractFillsAsync');
+
+        marketStub.resolves(
+          new Promise(resolve => {
+            resolve(fakeFillsResponse);
+          })
+        );
+
+        await MarketJS.getUserPositionsAsync(
+          mockContract.contract.key,
+          web3.eth.coinbase,
+          true,
+          true,
+          mockStore
+        );
+
+        expect(spy.alwaysReturned(fakeFillsResponse)).to.equal(true);
+      });
+    });
+  });
+
   describe('getUserUnallocatedCollateralBalanceAsync', () => {
     it('should return a users unallocatedCollateral as a string', () => {
       mockStore.getState().marketjs.then(async marketjs => {
@@ -99,11 +159,16 @@ describe('marketMiddleware', () => {
           MarketJS,
           'getUserUnallocatedCollateralBalanceAsync'
         );
-        sinon
-          .stub(marketjs, 'getUserUnallocatedCollateralBalanceAsync')
-          .callsFake(function then() {
-            return '1.000000000000000000';
-          });
+        let marketStub = sinon.stub(
+          marketjs,
+          'getUserUnallocatedCollateralBalanceAsync'
+        );
+
+        marketStub.resolves(
+          new Promise(resolve => {
+            resolve('1.000000000000000000');
+          })
+        );
 
         await MarketJS.getUserUnallocatedCollateralBalanceAsync(
           mockContract.contract,
