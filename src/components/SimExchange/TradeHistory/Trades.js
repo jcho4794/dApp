@@ -26,6 +26,10 @@ class Trades extends Component {
       await MarketJS.getContractFillsAsync(simExchange.contract.key).then(
         res => {
           console.log('getContractFillsAsync', res);
+
+          this.setState({
+            tradeHistory: res
+          });
         }
       );
     }
