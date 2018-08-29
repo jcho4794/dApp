@@ -935,19 +935,50 @@ ExchangeStep = Form.create()(ExchangeStep);
  *
  */
 class ContractNameStep extends BaseStepComponent {
-  render() {
+  constructor(props) {
+    super(props);
+
+    let { contractName } = this.props;
+    contractName = contractName
+      ? Utils.parseStandardizedContractName(contractName).userText
+      : '';
+
+    this.state = {
+      contractName,
+      prefix: this.getStandardContractName('')
+    };
+  }
+
+  getStandardContractName = name => {
     const {
       exchangeApi,
       expirationTimeStamp,
-      form,
       quoteAsset,
       symbolName
     } = this.props;
-    let { contractName } = this.props;
+    return Utils.createStandardizedContractName(
+      symbolName,
+      quoteAsset,
+      exchangeApi,
+      expirationTimeStamp,
+      name
+    );
+  };
 
-    if (contractName) {
-      contractName = Utils.parseStandardizedContractName(contractName).userText;
-    }
+  handleChange = e => {
+    const standardContractName = this.getStandardContractName(e.target.value);
+    this.setState({
+      contractName: Utils.parseStandardizedContractName(standardContractName)
+        .userText
+    });
+  };
+
+  render() {
+    const { form } = this.props;
+    let { contractName } = this.props;
+    contractName = contractName
+      ? Utils.parseStandardizedContractName(contractName).userText
+      : '';
 
     return (
       <Form
@@ -958,20 +989,19 @@ class ContractNameStep extends BaseStepComponent {
       >
         <h1 className="text-center">Contract Name</h1>
         <div className="step-inner-container">
-          <h2>Set Contract Name</h2>
+          <h2>Enter Custom Text</h2>
           <Field
             name="contractName"
-            addonBefore={Utils.createStandardizedContractName(
-              symbolName,
-              quoteAsset,
-              exchangeApi,
-              expirationTimeStamp,
-              ''
-            )}
             form={form}
             initialValue={contractName}
+            onChange={this.handleChange}
             hideLabel
           />
+          <h2>Final Contract Name</h2>
+          <p style={{ fontSize: '12px', fontWeight: 'bold' }}>
+            <span style={{ opacity: '0.7' }}>{this.state.prefix}</span>
+            {this.state.contractName}
+          </p>
         </div>
         <BiDirectionalNav text={'Set Gas Price'} {...this.props} />
       </Form>

@@ -41,6 +41,7 @@ class SelectTokenField extends React.Component {
         qtyMultiplier: '',
         oracleDataSource: ''
       });
+
       getExchangeObj(this.props.exchange)
         .fetchList(this.state.quotes)
         .subscribe(this.updateList);
@@ -54,6 +55,7 @@ class SelectTokenField extends React.Component {
   handleSelect(e) {
     const exchange = getExchangeObj(this.props.exchange);
     const symbol = this.state.pairs[e];
+
     if (exchange.getPrice) {
       const onSelect = this.onSelect;
       exchange.getPrice(symbol.symbol).subscribe(price => {
@@ -100,6 +102,7 @@ class SelectTokenField extends React.Component {
         message: 'Please select a token pairs'
       }
     ];
+
     const label = (
       <span>
         {!hideLabel && fieldSettings.label}{' '}
@@ -108,6 +111,7 @@ class SelectTokenField extends React.Component {
         )}
       </span>
     );
+
     return (
       <FormItem label={label}>
         {getFieldDecorator(name, {
