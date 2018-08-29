@@ -33,7 +33,7 @@ class SimExchange extends Component {
   }
 
   render() {
-    const { asks, bids, contract, contracts } = this.props;
+    const { contract, contracts } = this.props;
 
     if (!this.props.shouldRender) {
       return (
@@ -64,7 +64,7 @@ class SimExchange extends Component {
           <Col lg={6} xl={5}>
             <div className="column-container">
               <Wallet {...this.props} />
-              <Trades {...this.props} asks={asks} bids={bids} />
+              <Trades {...this.props} />
             </div>
           </Col>
           <Col lg={5} xl={5}>
@@ -74,7 +74,7 @@ class SimExchange extends Component {
           </Col>
           <Col lg={7} xl={9}>
             <div className="column-container">
-              <TradeChart />
+              <TradeChart {...this.props} />
               <OrdersPositionsFills {...this.props} />
             </div>
           </Col>
