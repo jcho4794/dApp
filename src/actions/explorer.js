@@ -6,7 +6,8 @@ import { Path } from '../util/marketAPI';
  * If the web3 parameter is set, the contracts are loaded from the blockchain,
  * else the marketAPI is used to load the contracts from the market-api service (which is faster).
  *
- * Typically, loading from web3 is used in the development environment.
+ * Typically, loading from web3 is used in the development environment (and should soon be deprecated
+ * in favour of a local market-api).
  *
  * @param processContracts function to process the loaded contract to a format required.
  * @param marketAPI The marketAPI resource used to interact with the server.
@@ -86,7 +87,7 @@ function loadContractsFromAPI(
   reject
 ) {
   marketAPI
-    .get(Path.WhitelistedContracts)
+    .get(Path.Contracts, { query: { whitelist: 1 } })
     .then(processContracts)
     .then(processedContracts => {
       dispatch({ type: `${type}_FULFILLED`, payload: processedContracts });

@@ -31,5 +31,16 @@ describe('marketAPI', () => {
           expect(response).to.equal(expectedResult);
         });
     });
+
+    it('should call fetch with url with query parameters', () => {
+      const query = { param: '1' };
+      spyFetch.resolves('{}');
+
+      return marketAPI
+        .get('/', { ...requestOptions, query })
+        .then(_response => {
+          expect(spyFetch.args[0][0]).contains('?param=1');
+        });
+    });
   });
 });
