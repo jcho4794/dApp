@@ -94,7 +94,7 @@ describe('ExplorerAction', () => {
       mockMarketAPI
         .expects('get')
         .once()
-        .withArgs(Path.WhitelistedContracts)
+        .withArgs(Path.Contracts)
         .resolves(apiResponsePayload);
       deployParams.processContracts = processAPIContractsList;
 
@@ -112,7 +112,7 @@ describe('ExplorerAction', () => {
       mockMarketAPI
         .expects('get')
         .once()
-        .withArgs(Path.WhitelistedContracts)
+        .withArgs(Path.Contracts)
         .rejects('Fatal network error');
 
       return runLoadContractsAction().catch(() => {
