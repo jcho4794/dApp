@@ -12,7 +12,7 @@ class TopBar extends Component {
   render() {
     const { contract, contracts } = this.props;
     let validContracts = _.filter(contracts, contract => {
-      return contract.isSettled === false;
+      return contract.isSettled === false && contract.isWhitelisted === true;
     });
 
     const menu = (

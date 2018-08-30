@@ -10,10 +10,7 @@ import { loadContracts } from '../actions/explorer';
 import CreateInitializer, {
   contractConstructor
 } from '../util/web3/contractInitializer';
-import {
-  processContractsList,
-  processAPIContractsList
-} from '../util/contracts';
+import { processAPIContractsList } from '../util/contracts';
 import { selectContract } from '../actions/simExchange';
 import { marketAPI } from '../util/marketAPI';
 
@@ -37,17 +34,6 @@ const mapDispatchToProps = dispatch => ({
       processContracts: processAPIContractsList,
       marketAPI
     };
-
-    if (fromWeb3) {
-      loadContractParams.web3 = web3;
-      loadContractParams.processContracts = processContractsList.bind(
-        null,
-        contracts.MarketContract,
-        contracts.MarketCollateralPool,
-        contracts.CollateralToken,
-        contracts.ERC20
-      );
-    }
 
     dispatch(
       loadContracts(loadContractParams, {
