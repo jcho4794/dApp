@@ -9,11 +9,7 @@ function url(path, query) {
   const host = 'https://dev.api.marketprotocol.io';
 
   const queryString = qs.stringify(query);
-  if (queryString === '') {
-    return `${host}${path}`;
-  } else {
-    return `${host}${path}${'?' + queryString}`;
-  }
+  return host + path + (queryString !== '' ? `${'?' + queryString}` : '');
 }
 
 export const marketAPI = {

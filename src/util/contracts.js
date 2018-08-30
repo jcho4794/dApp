@@ -1,3 +1,5 @@
+import { NULL_ADDRESS } from '../constants';
+
 export async function processContractsList(
   marketContract,
   marketCollateralPool,
@@ -11,7 +13,7 @@ export async function processContractsList(
       .then(async function(instance) {
         return await instance.MARKET_COLLATERAL_POOL_ADDRESS.call().then(
           async address => {
-            if (address !== '0x0000000000000000000000000000000000000000') {
+            if (address !== NULL_ADDRESS) {
               const contractJSON = {};
               contractJSON['key'] = instance.address;
               contractJSON[
