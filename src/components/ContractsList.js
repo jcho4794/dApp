@@ -1,4 +1,13 @@
-import { Col, Input, Row, Table, Select, Popover, Icon,Pagination } from 'antd';
+import {
+  Col,
+  Input,
+  Row,
+  Table,
+  Select,
+  Popover,
+  Icon,
+  Pagination
+} from 'antd';
 import moment from 'moment';
 import React, { Component } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -304,8 +313,7 @@ class ContractsList extends Component {
 
     if (this.state.contracts.length === 0) {
       table = <div>No contracts found</div>;
-    }
-    if (this.state.isGrid) {
+    } else if (this.state.isGrid) {
       table = (
         <div>
           <Grid
