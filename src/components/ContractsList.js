@@ -499,7 +499,7 @@ class ContractsList extends Component {
               ))}
             </Select>
           </Col>
-          <div style={{ position: 'absolute', right: '53px' }}>
+          <div style={{ position: 'absolute', right: '20px' }}>
             <div
               className="tableSelect"
               role="button"
