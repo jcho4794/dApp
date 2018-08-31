@@ -326,7 +326,12 @@ class ContractsList extends Component {
           >
             {this.state.contracts
               .filter(contract => {
-                if (!this.state.filters) return true;
+                console.log(this.state.filters);
+                if (
+                  !this.state.filters ||
+                  Object.values(this.state.filters)[0].length === 0
+                )
+                  return true;
                 let isgood = false;
 
                 Object.values(this.state.filters)[0].forEach(filter => {
