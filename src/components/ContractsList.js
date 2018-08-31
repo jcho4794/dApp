@@ -326,12 +326,9 @@ class ContractsList extends Component {
           >
             {this.state.contracts
               .filter(contract => {
-                if (
-                  !this.state.filters ||
-                  Object.values(this.state.filters)[0].length === 0
-                )
-                  return true;
+                if (!this.state.filters) return true;
                 let isgood = false;
+
                 Object.values(this.state.filters)[0].forEach(filter => {
                   if (contract[Object.keys(this.state.filters)[0]] === filter)
                     isgood = true;
@@ -344,8 +341,10 @@ class ContractsList extends Component {
               )
 
               .map(contract => {
+                if (!contract || !contract.CONTRACT_NAME) return;
                 let symbolTextLeft = contract.CONTRACT_NAME.split('_')[0];
                 let symbolTextRight = contract.CONTRACT_NAME.split('_')[1];
+                if (!symbolTextRight) symbolTextRight = 'other';
                 return (
                   <div className="gridItem" key={'contract_' + contract.key}>
                     <div className="detailsGridContainer">

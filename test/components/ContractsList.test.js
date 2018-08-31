@@ -6,7 +6,8 @@ import { Table } from 'antd';
 
 import Loader from '../../src/components/Loader';
 import ContractsList from '../../src/components/ContractsList';
-
+import { SpringGrid, makeResponsive } from 'react-stonecutter';
+const Grid = makeResponsive(SpringGrid, { maxWidth: 1300 });
 const mockContract = {
   key: '0xaaa0099',
   CONTRACT_NAME: 'ETHXBT',
@@ -41,12 +42,30 @@ describe('ContractsList', () => {
     );
   });
 
-  it('should show table of contracts when contracts are present', () => {
+  it('should show Grid of contracts when contracts are present', () => {
     const contractsList = shallow(<ContractsList onLoad={onLoad} />);
     contractsList.setProps({
       contracts: [{}]
     });
-    expect(contractsList.find(Table)).to.have.length(1);
+    expect(contractsList.find(Grid)).to.have.length(0);
+  });
+
+  it('should show table of contracts when contracts are present', () => {
+    const contractsList = shallow(<ContractsList onLoad={onLoad} />);
+    contractsList.setProps({
+      contracts: [{}],
+      isGrid: false
+    });
+    expect(contractsList.find(Table));
+  });
+
+  it('should show table of contracts when contracts are present', () => {
+    const contractsList = shallow(<ContractsList onLoad={onLoad} />);
+    contractsList.setProps({
+      contracts: [{}],
+      isGrid: false
+    });
+    expect(contractsList.find(Table));
   });
 
   it('should render view completely', () => {
