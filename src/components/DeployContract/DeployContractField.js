@@ -121,7 +121,9 @@ const fieldSettingsByName = {
       }
     ],
     extra: `Name of contract should be descriptive, e.g. "ETH/BTC-20180228-Kraken"`,
-    component: () => <Input />
+    component: ({ onChange }) => {
+      return <Input onChange={onChange} />;
+    }
   },
 
   collateralTokenAddress: {
@@ -362,11 +364,16 @@ const fieldSettingsByName = {
         showTime
         disabledDate={current => {
           const now = moment().startOf('day');
-          return (current && (current.valueOf() < now || current.diff(now, 'days') > 60));
+          return (
+            current &&
+            (current.valueOf() < now || current.diff(now, 'days') > 60)
+          );
         }}
         onChange={selectedDate => {
           const now = moment();
-          return (selectedDate && selectedDate.isSameOrBefore(now) ? selectedDate.set(now.toObject()).add(60, 'm') : selectedDate);
+          return selectedDate && selectedDate.isSameOrBefore(now)
+            ? selectedDate.set(now.toObject()).add(60, 'm')
+            : selectedDate;
         }}
         showToday={false}
         format="YYYY-MM-DD HH:mm:ss"

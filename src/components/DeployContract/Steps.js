@@ -6,6 +6,7 @@ import { Button, Form, Icon, Steps, Input, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Utils } from '@marketprotocol/marketjs';
 
 import Field, { FieldSettings } from './DeployContractField';
 import DeployContractSuccess from './DeployContractSuccess';
@@ -45,10 +46,30 @@ class BaseStepComponent extends Component {
    */
   handleSubmit(e) {
     e.preventDefault();
-    this.props.form.validateFields((err, fieldsValue) => {
+
+    const {
+      exchangeApi,
+      expirationTimeStamp,
+      form,
+      quoteAsset,
+      symbolName
+    } = this.props;
+
+    form.validateFields((err, fieldsValue) => {
       if (err) {
         return;
       }
+
+      if (fieldsValue.contractName) {
+        fieldsValue.contractName = Utils.createStandardizedContractName(
+          symbolName,
+          quoteAsset,
+          exchangeApi,
+          expirationTimeStamp,
+          fieldsValue.contractName
+        );
+      }
+
       const timestamp = fieldsValue['expirationTimeStamp']
         ? {
             expirationTimeStamp: Math.floor(
@@ -427,7 +448,10 @@ class ExpirationStep extends BaseStepComponent {
             )}
           </div>
         </div>
-        <BiDirectionalNav text="Deploy Contract" {...this.props} />
+        <BiDirectionalNav
+          text={isSimplified ? 'Set Contract Name' : 'Deploy Contract'}
+          {...this.props}
+        />
       </Form>
     );
   }
@@ -862,8 +886,6 @@ class ExchangeStep extends BaseStepComponent {
   }
 
   render() {
-    const { form, contractName } = this.props;
-
     return (
       <Form
         className="step-container"
@@ -895,18 +917,11 @@ class ExchangeStep extends BaseStepComponent {
             onSelect={this.props.updateDeploymentState}
             hideLabel
           />
-          <h2>Contract Name</h2>
-          <Field
-            name="contractName"
-            initialValue={contractName}
-            form={form}
-            hideLabel
-          />
         </div>
         <BiDirectionalNav text="View Pricing Rules" {...this.props} />
-        <a href={'/contract/deploy?mode=quick'}>
-          <p className="m-top-40 m-bottom-40">View advanced deploy</p>
-        </a>
+        {/*<a href={'/contract/deploy?mode=quick'}>*/}
+        {/*<p className="m-top-40 m-bottom-40">View advanced deploy</p>*/}
+        {/*</a>*/}
       </Form>
     );
   }
@@ -914,7 +929,90 @@ class ExchangeStep extends BaseStepComponent {
 
 ExchangeStep = Form.create()(ExchangeStep);
 
+/**
+ * Fifth step in the simplified contract.
+ * [Input] Contract Name
+ *
+ */
+class ContractNameStep extends BaseStepComponent {
+  constructor(props) {
+    super(props);
+
+    let { contractName } = this.props;
+    contractName = contractName
+      ? Utils.parseStandardizedContractName(contractName).userText
+      : '';
+
+    this.state = {
+      contractName,
+      prefix: this.getStandardContractName('')
+    };
+  }
+
+  getStandardContractName = name => {
+    const {
+      exchangeApi,
+      expirationTimeStamp,
+      quoteAsset,
+      symbolName
+    } = this.props;
+    return Utils.createStandardizedContractName(
+      symbolName,
+      quoteAsset,
+      exchangeApi,
+      expirationTimeStamp,
+      name
+    );
+  };
+
+  handleChange = e => {
+    const standardContractName = this.getStandardContractName(e.target.value);
+    this.setState({
+      contractName: Utils.parseStandardizedContractName(standardContractName)
+        .userText
+    });
+  };
+
+  render() {
+    const { form } = this.props;
+    let { contractName } = this.props;
+    contractName = contractName
+      ? Utils.parseStandardizedContractName(contractName).userText
+      : '';
+
+    return (
+      <Form
+        className="step-container"
+        onSubmit={this.handleSubmit.bind(this)}
+        layout="vertical"
+        hideRequiredMark={true}
+      >
+        <h1 className="text-center">Contract Name</h1>
+        <div className="step-inner-container">
+          <h2>Enter Custom Text</h2>
+          <Field
+            name="contractName"
+            form={form}
+            initialValue={contractName}
+            onChange={this.handleChange}
+            hideLabel
+          />
+          <h2>Final Contract Name</h2>
+          <p style={{ fontSize: '12px', fontWeight: 'bold' }}>
+            <span style={{ opacity: '0.7' }}>{this.state.prefix}</span>
+            {this.state.contractName}
+          </p>
+        </div>
+        <BiDirectionalNav text={'Set Gas Price'} {...this.props} />
+      </Form>
+    );
+  }
+}
+
+ContractNameStep = Form.create()(ContractNameStep);
+
 export {
+  ContractNameStep,
   NameContractStep,
   PricingStep,
   ExpirationStep,
