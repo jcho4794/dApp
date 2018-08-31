@@ -437,7 +437,7 @@ class ContractsList extends Component {
           style={{ padding: '30px 20px' }}
           gutter={16}
         >
-          <Col span={10}>
+          <Col span={8}>
             <div>
               <Search
                 ref={ele => (this.contractNameSearchInput = ele)}
@@ -499,7 +499,7 @@ class ContractsList extends Component {
               ))}
             </Select>
           </Col>
-          <Col>
+          <div style={{ position: 'absolute', right: '53px' }}>
             <div
               className="tableSelect"
               role="button"
@@ -571,7 +571,7 @@ class ContractsList extends Component {
                 />
               </svg>
             </div>
-          </Col>
+          </div>
         </Row>
         <style
           dangerouslySetInnerHTML={{
