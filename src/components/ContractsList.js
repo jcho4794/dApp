@@ -341,7 +341,7 @@ class ContractsList extends Component {
               )
 
               .map(contract => {
-                if (!contract || !contract.CONTRACT_NAME) return;
+                if (!contract || !contract.CONTRACT_NAME) return null;
                 let symbolTextLeft = contract.CONTRACT_NAME.split('_')[0];
                 let symbolTextRight = contract.CONTRACT_NAME.split('_')[1];
                 if (!symbolTextRight) symbolTextRight = 'other';
