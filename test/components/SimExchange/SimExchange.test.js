@@ -25,7 +25,14 @@ describe('SimExchange', () => {
       contract: {}
     },
     tradeOrder: {},
-    contract: {}
+    contract: {},
+    web3: {
+      web3Instance: {
+        version: {
+          network: 'truffle'
+        }
+      }
+    }
   };
 
   beforeEach(() => {
@@ -86,7 +93,11 @@ describe('SimExchange', () => {
   it('renders dummy text when disabled', () => {
     const component = mount(
       <MemoryRouter initialEntries={[{ tradesPath, key: 'start' }]}>
-        <SimExchange getContracts={getContractsSpy} shouldRender={false} />
+        <SimExchange
+          {...props}
+          getContracts={getContractsSpy}
+          shouldRender={false}
+        />
       </MemoryRouter>
     ).find(SimExchange);
     const showsDummy = component.containsMatchingElement(
