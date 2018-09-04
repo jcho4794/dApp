@@ -37,8 +37,6 @@ class Orders extends Component {
   getOrders(contractAddress) {
     marketAPI.get(Path.Orders(contractAddress)).then(
       function(response) {
-        console.log('response', response);
-
         this.setState({
           bids: response.bids,
           asks: response.asks,

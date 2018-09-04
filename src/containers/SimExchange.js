@@ -27,17 +27,18 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getContracts: (loadFromWeb3 = false) => {
+  getContracts: fromWeb3 => {
     const web3 = store.getState().web3.web3Instance;
     const contracts = CreateInitializer(contractConstructor.bind(null, web3))(
       Contracts
     );
+
     const loadContractParams = {
       processContracts: processAPIContractsList,
       marketAPI
     };
 
-    if (loadFromWeb3) {
+    if (fromWeb3) {
       loadContractParams.web3 = web3;
       loadContractParams.processContracts = processContractsList.bind(
         null,
