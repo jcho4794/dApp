@@ -16,7 +16,9 @@ import TradeChart from './TradeChart/Chart';
 class SimExchange extends Component {
   componentDidMount() {
     if (!this.props.contracts) {
-      this.props.getContracts();
+      const network = this.props.web3.web3Instance.version.network;
+
+      this.props.getContracts(true);
     }
   }
 
