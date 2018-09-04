@@ -1,9 +1,12 @@
 #wallet {
     .available-collateral {
         box-shadow: 0 1px 0 0 #2b323b;
-        display: flex;
-        justify-content: space-between;
         padding: 10px 15px;
+
+        @media (min-width: 1439px) {
+            display: flex;
+            justify-content: space-between;
+        }
     }
 
     .unallocated-collateral {
