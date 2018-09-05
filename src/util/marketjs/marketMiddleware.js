@@ -142,6 +142,7 @@ const getContractFillsAsync = (
     side
   );
 };
+
 /**
  * @param marketContractAddress MARKET contract address(key)
  * @param userAddress users wallet address
