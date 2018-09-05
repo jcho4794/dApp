@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Col, Row } from 'antd';
 import { withRouter } from 'react-router';
 import _ from 'lodash';
+import moment from 'moment';
 
 import TopBar from './TopBar';
 import Trades from './Trade/Trades';
@@ -16,16 +17,19 @@ import TradeChart from './TradeChart/Chart';
 class SimExchange extends Component {
   componentDidMount() {
     if (!this.props.contracts) {
-      // this is set to true now because, other parts of the sim exchange
-      // is not yet setup to work with the Market API
-      this.props.getContracts(true);
+      const network = this.props.web3.web3Instance.version.network;
+
+      this.props.getContracts(network === 'truffle');
     }
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.contracts && !this.props.contract) {
       let filteredContracts = _.filter(this.props.contracts, contract => {
-        return contract.isSettled === false;
+        return (
+          contract.isSettled === false &&
+          moment.unix(contract.EXPIRATION).isAfter(moment())
+        );
       });
 
       this.props.selectContract(filteredContracts[0]);
