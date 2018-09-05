@@ -1,15 +1,26 @@
-import { Col, Input, Row, Table, Select, Popover, Icon } from 'antd';
-import moment from 'moment';
+import {
+  Button,
+  Col,
+  Icon,
+  Input,
+  Popover,
+  Row,
+  Select,
+  Table,
+  Tooltip
+} from 'antd';
 import React, { Component } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import moment from 'moment';
 
-import '../less/ContractsList.less';
-
-import { formatedTimeFrom } from '../util/utils';
 import Loader from './Loader';
+import { copyTextToClipboard, formatedTimeFrom } from '../util/utils';
 import { UseWeb3Switch } from './DevComponents';
 
-const Search = Input.Search;
+// Styles
+import '../less/ContractsList.less';
+
+const Option = Select.Option;
+
 // Example Contract
 /* {
   "COLLATERAL_TOKEN": "0xa4392264a2d8c998901d10c154c91725b1bf0158",
@@ -23,7 +34,7 @@ const Search = Input.Search;
   "isSettled": true,
   "lastPrice": "105700"
 } */
-const Option = Select.Option;
+
 class ContractsList extends Component {
   state = {
     filters: null,
@@ -45,6 +56,7 @@ class ContractsList extends Component {
       this.props.onLoad(false);
     }
   }
+
   componentDidUpdate(prevProps) {
     if (this.props.contracts !== prevProps.contracts) {
       this.setState({ contracts: this.props.contracts });
@@ -60,7 +72,7 @@ class ContractsList extends Component {
   }
 
   handleChange = (pagination, filters, sorter) => {
-    console.log(pagination);
+    window.scrollTo(0, 0);
     this.setState({
       filters: filters,
       sort: sorter,
@@ -69,7 +81,14 @@ class ContractsList extends Component {
   };
 
   onInputChange = (e, searchKey) => {
-    this.setState({ [searchKey]: e.target.value });
+    this.setState({ [searchKey]: e.target.value }, () => {
+      this.onSearch(
+        'CONTRACT_NAME',
+        'CONTRACT_NAME_SEARCH_TEXT',
+        'contractSearchVisible',
+        'contractFiltered'
+      );
+    });
   };
 
   onSearch = (dataKey, searchKey, searchVisibleKey, filteredKey) => {
@@ -81,11 +100,7 @@ class ContractsList extends Component {
     let newContracts = this.props.contracts
       .map(record => {
         const match = record[dataKey].match(reg);
-        if (!match) {
-          console.log(reg, record[dataKey]);
-          return null;
-        }
-        return record;
+        return match ? record : null;
       })
       .filter(record => !!record)
       .filter(
@@ -104,6 +119,7 @@ class ContractsList extends Component {
     sort = sort || {};
     filters = filters || {};
     contracts = contracts || [];
+
     let pageInfo =
       this.state.page +
       '-' +
@@ -114,6 +130,7 @@ class ContractsList extends Component {
     let customSort = (text, columnKey) => {
       let icon = '';
       let newOrder = 'descend';
+
       if (sort.columnKey === columnKey) {
         icon = (
           <Icon
@@ -123,6 +140,7 @@ class ContractsList extends Component {
         );
         newOrder = sort.order === 'ascend' ? 'descend' : 'ascend';
       }
+
       return (
         <span
           role="button"
@@ -138,11 +156,13 @@ class ContractsList extends Component {
         </span>
       );
     };
+
     let collateralTokenSymbols = [
       ...new Set(contracts.map(item => item.COLLATERAL_TOKEN_SYMBOL))
     ].map(item => {
       return { value: item, text: item };
     });
+
     const columns = [
       {
         title: customSort('Name', 'CONTRACT_NAME'),
@@ -151,13 +171,23 @@ class ContractsList extends Component {
         sorter: (a, b) => {
           return a.CONTRACT_NAME.localeCompare(b.CONTRACT_NAME);
         },
-        sortOrder: sort.columnKey === 'CONTRACT_NAME' && sort.order
+        sortOrder: sort.columnKey === 'CONTRACT_NAME' && sort.order,
+        render: text => {
+          return (
+            <Tooltip
+              placement="topLeft"
+              overlayStyle={{ maxWidth: '350px' }}
+              title={text}
+            >
+              {text}
+            </Tooltip>
+          );
+        }
       },
       {
         title: 'Base Token',
         dataIndex: 'COLLATERAL_TOKEN',
         width: 150,
-
         tokenSearchVisible: this.state.tokenSearchVisible,
         onFilterDropdownVisibleChange: visible => {
           this.setState(
@@ -168,17 +198,19 @@ class ContractsList extends Component {
               this.collateralTokenSearchInput &&
               this.collateralTokenSearchInput.focus()
           );
+        },
+        render: text => {
+          return (
+            <Tooltip placement="topLeft" title={text}>
+              {text}
+            </Tooltip>
+          );
         }
       },
       {
         title: 'Symbol',
         dataIndex: 'COLLATERAL_TOKEN_SYMBOL',
         width: 150,
-
-        render: (text, row, index) => {
-          return text;
-        },
-
         filteredValue: filters.COLLATERAL_TOKEN_SYMBOL || null,
         onFilter: (value, record) => record.COLLATERAL_TOKEN_SYMBOL === value
       },
@@ -250,9 +282,12 @@ class ContractsList extends Component {
                   <strong>Last Price </strong> {record.lastPrice}
                 </Col>
               </Row>
-              <CopyToClipboard text={record.ORACLE_QUERY}>
-                <button className="copyOrcaleQuery">Copy Orcale Query</button>
-              </CopyToClipboard>
+              <Button
+                className="copyOrcaleQuery"
+                onClick={() => copyTextToClipboard(record.ORACLE_QUERY)}
+              >
+                Copy Oracle Query
+              </Button>
             </div>
           );
           return (
@@ -276,6 +311,7 @@ class ContractsList extends Component {
     if (!this.state.contracts) {
       return <Loader />;
     }
+
     let table = (
       <Table
         columns={columns}
@@ -283,17 +319,20 @@ class ContractsList extends Component {
         onChange={this.handleChange}
         pagination={{ pageSize: this.state.pageSize }}
         ref="table"
-        // scroll={{ y: '60vh' }}
       />
     );
+
     this.table = table;
+
     if (this.state.contracts.length === 0) {
       table = <div>No contracts found</div>;
     }
 
     return (
       <div className="page contractPage" style={{ margin: '0 13%' }}>
-        <UseWeb3Switch onChange={this.props.onLoad} />
+        {process.env.NODE_ENV === 'development' && (
+          <UseWeb3Switch onChange={this.props.onLoad} />
+        )}
         <Row
           type="flex"
           justify="start"
@@ -301,24 +340,12 @@ class ContractsList extends Component {
           gutter={16}
         >
           <Col span={10}>
-            <div>
-              <Search
-                ref={ele => (this.contractNameSearchInput = ele)}
-                placeholder="Search Contract Name"
-                value={this.state['CONTRACT_NAME_SEARCH_TEXT']}
-                onChange={e =>
-                  this.onInputChange(e, 'CONTRACT_NAME_SEARCH_TEXT')
-                }
-                onPressEnter={() =>
-                  this.onSearch(
-                    'CONTRACT_NAME',
-                    'CONTRACT_NAME_SEARCH_TEXT',
-                    'contractSearchVisible',
-                    'contractFiltered'
-                  )
-                }
-              />
-            </div>
+            <Input
+              suffix={<Icon type="search" />}
+              placeholder="Search Contract Name"
+              value={this.state['CONTRACT_NAME_SEARCH_TEXT']}
+              onChange={e => this.onInputChange(e, 'CONTRACT_NAME_SEARCH_TEXT')}
+            />
           </Col>
           <Col span={6}>
             <Select
