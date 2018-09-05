@@ -7,6 +7,41 @@ import { Table, Row } from 'antd';
 import columns from './Columns';
 import _ from 'lodash';
 
+// Example Wallet History
+/* const datasource = [
+  {
+    amount: '5000 USD',
+    block: '2134123',
+    details: {
+      hash: '0xf5b80c91de0a637d881d2e8b2158456fe4b030aeee0c4b062b575e375de160a8'
+    },
+    addresses: {
+      from:
+        '0xf5b80c91de0a637d881d2e8b2158456fe4b030aeee0c4b062b575e375de160a8',
+      to: '0xf5b80c91de0a637d881d2e8b2158456fe4b030aeee0c4b062b575e375de160a8'
+    },
+    inout: 'in',
+    key: '0xf5b80c91de0a637d881d2e8b2158456fe4b030aeee0c4b062b575e375de160a8',
+    type: 'deposit'
+  },
+  {
+    amount: '2500 USD',
+    block: '4134123',
+    details: {
+      hash:
+        '0x12b80c91de0a637d881d2e8b2158456fe4b030aeee0c4b062b575e375de162438'
+    },
+    addresses: {
+      from:
+        '0xf5b80c91de0a637d881d2e8b2158456fe4b030aeee0c4b062b575e375de160a8',
+      to: '0xf5b80c91de0a637d881d2e8b2158456fe4b030aeee0c4b062b575e375de160a8'
+    },
+    inout: 'out',
+    key: '0xf5b80c9ase0a637d881d2e8b2158456fe4b030aeee0c4b062b575e375de160a8',
+    type: 'withdraw'
+  }
+]; */
+
 class BuyTable extends Component {
   constructor(props) {
     super(props);

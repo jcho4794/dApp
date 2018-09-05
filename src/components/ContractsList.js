@@ -283,7 +283,7 @@ class ContractsList extends Component {
                 </Col>
               </Row>
               <Button
-                className="copyOrcaleQuery"
+                className="popover-action"
                 onClick={() => copyTextToClipboard(record.ORACLE_QUERY)}
               >
                 Copy Oracle Query
