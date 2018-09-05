@@ -64,7 +64,7 @@ class BaseStepComponent extends Component {
 
       if (fieldsValue.contractName) {
         fieldsValue.contractName = Utils.createStandardizedContractName(
-          symbolName,
+          symbolName.replace(quoteAsset, ''),
           quoteAsset,
           exchangeApi,
           new BigNumber(expirationTimeStamp),
@@ -952,6 +952,7 @@ class ContractNameStep extends BaseStepComponent {
   }
 
   getStandardContractName = name => {
+    console.log(this.props);
     const {
       exchangeApi,
       expirationTimeStamp,
@@ -959,7 +960,7 @@ class ContractNameStep extends BaseStepComponent {
       symbolName
     } = this.props;
     return Utils.createStandardizedContractName(
-      symbolName,
+      symbolName.replace(quoteAsset, ''),
       quoteAsset,
       exchangeApi,
       new BigNumber(expirationTimeStamp),
