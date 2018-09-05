@@ -31,7 +31,7 @@ class FillOrder extends Component {
         web3.web3Instance.eth.coinbase,
         'any'
       ).then(res => {
-        console.log('getMyContractFillsAsync', res);
+        console.log('getContractFillsAsync(user specific)', res);
 
         this.setState({
           tradeHistory: res
