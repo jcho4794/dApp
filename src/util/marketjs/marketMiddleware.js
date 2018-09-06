@@ -73,8 +73,6 @@ const depositCollateralAsync = (amount, str = store) => {
         txParams
       )
       .then(res => {
-        console.log('res', res);
-
         return web3.eth.getTransactionReceiptMined(res).then(function() {
           marketjs
             .depositCollateralAsync(
