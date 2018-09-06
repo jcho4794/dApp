@@ -65,6 +65,10 @@ class HeaderMenu extends Component {
     }
   }
 
+  getTruncatedAvailableCollateral(num) {
+    return num.indexOf('.') > -1 ? num.slice(0, num.indexOf('.') + 3) : num;
+  }
+
   render() {
     const { amount } = this.state;
     const { simExchange } = this.props;
@@ -91,12 +95,9 @@ class HeaderMenu extends Component {
                     contract.COLLATERAL_TOKEN_SYMBOL
                   }
                 >
-                  {this.state.availableCollateral
-                    .toString()
-                    .slice(
-                      0,
-                      this.state.availableCollateral.toString().indexOf('.') + 3
-                    )}{' '}
+                  {this.getTruncatedAvailableCollateral(
+                    this.state.availableCollateral.toString()
+                  )}{' '}
                   {contract.COLLATERAL_TOKEN_SYMBOL}
                 </Tooltip>
               </div>

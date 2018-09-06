@@ -1,58 +1,99 @@
 import React from 'react';
-import { Button, Popover } from 'antd';
+import { Button, Col, Icon, Popover, Row } from 'antd';
+import {
+  copyTextToClipboard,
+  getEtherscanUrl,
+  shortenAddress
+} from '../../../util/utils';
 
 export default [
   {
-    title: 'Block #',
-    dataIndex: 'block',
-    key: 'block'
-  },
-  {
-    title: 'In / Out',
-    key: 'inout',
-    render: (text, record) => (
-      <span className={`action action-${text.inout}`}>{text.inout}</span>
-    )
-  },
-  {
-    title: 'Type',
-    dataIndex: 'type',
-    key: 'type'
-  },
-  {
-    title: 'From / To',
-    key: 'addresses',
-    render: (text, record) => (
-      <div>
-        <div>{text.addresses.from}</div>
-        <div>{text.addresses.to}</div>
-      </div>
-    )
-  },
-  {
     title: 'Amount',
-    dataIndex: 'amount',
-    key: 'amount'
+    key: 'amount',
+    render: text => (
+      <span className={`action-${text.type}`}>
+        <Icon
+          type={text.type === 'deposit' ? 'arrow-down' : 'arrow-up'}
+          theme="outlined"
+        />
+        {text.amount}
+      </span>
+    )
+  },
+  {
+    title: 'Tx Hash',
+    key: 'txhash',
+    render: text => <span>{shortenAddress(text.details.hash)}</span>
   },
   {
     title: '',
     key: 'details',
-    render: (text, record) => (
+    render: text => (
       <Popover
-        placement="left"
-        trigger="click"
         content={
-          <div className="popover-content">
-            <div className="details">
-              <div className="details-header">Hash:</div>
-              <div title={text.details.hash} className="details-info">
-                {text.details.hash}
-              </div>
-            </div>
+          <div>
+            <Row
+              style={{ padding: '14px' }}
+              type="flex"
+              justify="space-between"
+            >
+              <Col style={{ marginRight: '20px' }}>
+                <div>Block # </div>
+                <div>From </div>
+                <div>To </div>
+                <div>Tx Hash </div>
+              </Col>
+              <Col>
+                <div>{text.block}</div>
+                <div>
+                  {shortenAddress(text.addresses.from)}
+                  <Icon
+                    className="copy-icon"
+                    type="copy"
+                    theme="filled"
+                    onClick={() => copyTextToClipboard(text.addresses.from)}
+                  />
+                </div>
+                <div>
+                  {shortenAddress(text.addresses.to)}
+                  <Icon
+                    className="copy-icon"
+                    type="copy"
+                    theme="filled"
+                    onClick={() => copyTextToClipboard(text.addresses.to)}
+                  />
+                </div>
+                <div>
+                  {shortenAddress(text.details.hash)}
+                  <Icon
+                    className="copy-icon"
+                    type="copy"
+                    theme="filled"
+                    onClick={() => copyTextToClipboard(text.details.hash)}
+                  />
+                </div>
+              </Col>
+            </Row>
+            <Button
+              type="primary"
+              className="popover-action"
+              href={`${getEtherscanUrl(text.network)}/address/${
+                text.details.hash
+              }`}
+              target={'_blank'}
+            >
+              View in etherscan
+            </Button>
           </div>
         }
+        placement={'bottomLeft'}
+        trigger="click"
       >
-        <Button>Details</Button>
+        <div className="dotdotdot">
+          <span className="dot" />
+          <span className="dot" />
+          <span className="dot" />
+        </div>
       </Popover>
     )
   }

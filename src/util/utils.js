@@ -190,3 +190,16 @@ export const copyTextToClipboard = text => {
     return false;
   }
 };
+
+/**
+ * Returns a shortened address with first 4 and last 4 digits
+ * @param {string} address
+ */
+export const shortenAddress = address => {
+  address = address.toString();
+  return (
+    address.substring(0, 6) +
+    '...' +
+    address.substring(address.length - 4, address.length)
+  );
+};

@@ -186,7 +186,6 @@ code {
         border: 1px solid white;
     }
     .ant-popover {
-        max-width: 350px;
         line-height: 25px;
         font-size: 13px;
         font-weight: 500;
@@ -212,22 +211,54 @@ code {
         display: inline-block;
     }
 
-    .contractPopOver {
-        max-width: 500px !important;
+    .popover-action {
+        cursor: pointer;
+        width: 100%;
+        background: transparent;
+        border-top: 1px solid #2b323b;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        border-radius: 0 0 4px 4px;
+        color: #05ccb7;
+
+        &:hover {
+            background: #0e121a;
+        }
+    }
+
+    .ant-popover {
         color: white;
         .ant-popover-inner {
             color: white;
-            background-color: white;
-            border: 2px solid #00ffe2;
+            border: 1px solid #979797;
+            box-shadow: 0 2px 9px 0 #000000;
+            border-radius: 4px;
         }
         .ant-popover-inner-content {
-            background-color: black;
             color: white;
-            padding: 0px;
+            padding: 0;
+            border-radius: 4px;
         }
         .ant-popover-arrow {
             display: none;
         }
+        i {
+            cursor: pointer;
+
+            &:hover {
+                opacity: 0.5;
+            }
+        }
+    }
+
+    .dotdotdot {
+        outline: none;
+        cursor: pointer;
+    }
+
+    .ant-popover-open .dot {
+        background-color: #00ffe2;
     }
 
     .contractPage {
@@ -290,14 +321,8 @@ code {
         .ant-table-thead > tr > th.ant-table-column-sort {
             background-color: fade(#fff, 0%);
         }
-        .dotdotdot {
-            outline: none;
-        }
         .ant-popover-open {
             border: 0;
-        }
-        .ant-popover-open .dot {
-            background-color: #00ffe2;
         }
         .ant-pagination-item-link {
             background-color: black;
