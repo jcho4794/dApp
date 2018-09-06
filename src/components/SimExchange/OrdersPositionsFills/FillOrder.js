@@ -15,8 +15,53 @@ class FillOrder extends Component {
     this.updateOrderJSON = this.updateOrderJSON.bind(this);
 
     this.state = {
-      orderJSON: ''
+      orderJSON: '',
+      tradeHistory: []
     };
+  }
+
+  async componentDidMount() {
+    const { simExchange, web3 } = this.props;
+
+    if (simExchange.contract) {
+      await MarketJS.getContractFillsAsync(
+        simExchange.contract.key,
+        0,
+        'latest',
+        web3.web3Instance.eth.coinbase,
+        'any'
+      ).then(res => {
+        console.log('getContractFillsAsync(user specific)', res);
+
+        this.setState({
+          tradeHistory: res
+        });
+      });
+    }
+  }
+
+  async componentDidUpdate(prevProps) {
+    const { simExchange, web3 } = this.props;
+
+    if (
+      simExchange.contract &&
+      (prevProps.simExchange.contract === null ||
+        prevProps.simExchange.contract.key !== simExchange.contract.key)
+    ) {
+      await MarketJS.getContractFillsAsync(
+        simExchange.contract.key,
+        0,
+        'latest',
+        web3.web3Instance.eth.coinbase,
+        'any'
+      ).then(res => {
+        console.log('getMyContractFillsAsync', res);
+
+        this.setState({
+          tradeHistory: res
+        });
+      });
+    }
   }
 
   async onSubmit(e) {
