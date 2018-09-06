@@ -3,7 +3,8 @@ import React, { Component, Fragment } from 'react';
 import { Table, Row } from 'antd';
 
 import columns from './Columns';
-import _ from 'lodash';
+
+import { MarketJS } from '../../../util/marketjs/marketMiddleware';
 
 class BuyTable extends Component {
   constructor(props) {
@@ -19,13 +20,16 @@ class BuyTable extends Component {
     const { simExchange } = this.props;
 
     if (simExchange.contract) {
-      // MarketJS.getCollateralEventsAsync(simExchange.contract.key).then(
-      //   transactions => {
-      //     this.setState({
-      //       transactions: transactions
-      //     });
-      //   }
-      // );
+      MarketJS.getCollateralEventsAsync(
+        simExchange.contract.key,
+        0,
+        'latest',
+        this.props.web3.web3Instance.eth.coinbase
+      ).then(transactions => {
+        this.setState({
+          transactions: transactions
+        });
+      });
     }
   }
 
@@ -36,13 +40,16 @@ class BuyTable extends Component {
       simExchange.contract &&
       simExchange.contract !== prevProps.simExchange.contract
     ) {
-      // MarketJS.getCollateralEventsAsync(simExchange.contract.key).then(
-      //   transactions => {
-      //     this.setState({
-      //       transactions: transactions
-      //     });
-      //   }
-      // );
+      MarketJS.getCollateralEventsAsync(
+        simExchange.contract.key,
+        0,
+        'latest',
+        this.props.web3.web3Instance.eth.coinbase
+      ).then(transactions => {
+        this.setState({
+          transactions: transactions
+        });
+      });
     }
   }
 

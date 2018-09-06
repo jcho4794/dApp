@@ -128,6 +128,7 @@ export const getEtherscanUrl = networkId => {
     case 'ropsten':
       return 'https://ropsten.etherscan.io';
     case 'rinkeby':
+    case '4':
       return 'https://rinkeby.etherscan.io';
     case 'kovan':
       return 'https://kovan.etherscan.io';

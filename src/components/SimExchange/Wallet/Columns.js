@@ -22,8 +22,8 @@ export default [
   },
   {
     title: 'Tx Hash',
-    key: 'txhash',
-    render: text => <span>{shortenAddress(text.details.hash)}</span>
+    key: 'txHash',
+    render: text => <span>{shortenAddress(text.txHash)}</span>
   },
   {
     title: '',
@@ -44,32 +44,32 @@ export default [
                 <div>Tx Hash </div>
               </Col>
               <Col>
-                <div>{text.block}</div>
+                <div>{text.blockNumber}</div>
                 <div>
-                  {shortenAddress(text.addresses.from)}
+                  {shortenAddress(text.from)}
                   <Icon
                     className="copy-icon"
                     type="copy"
                     theme="filled"
-                    onClick={() => copyTextToClipboard(text.addresses.from)}
+                    onClick={() => copyTextToClipboard(text.from)}
                   />
                 </div>
                 <div>
-                  {shortenAddress(text.addresses.to)}
+                  {shortenAddress(text.to)}
                   <Icon
                     className="copy-icon"
                     type="copy"
                     theme="filled"
-                    onClick={() => copyTextToClipboard(text.addresses.to)}
+                    onClick={() => copyTextToClipboard(text.to)}
                   />
                 </div>
                 <div>
-                  {shortenAddress(text.details.hash)}
+                  {shortenAddress(text.txHash)}
                   <Icon
                     className="copy-icon"
                     type="copy"
                     theme="filled"
-                    onClick={() => copyTextToClipboard(text.details.hash)}
+                    onClick={() => copyTextToClipboard(text.txHash)}
                   />
                 </div>
               </Col>
@@ -77,9 +77,7 @@ export default [
             <Button
               type="primary"
               className="popover-action"
-              href={`${getEtherscanUrl(text.network)}/address/${
-                text.details.hash
-              }`}
+              href={`${getEtherscanUrl(text.network)}/address/${text.txHash}`}
               target={'_blank'}
             >
               View in etherscan

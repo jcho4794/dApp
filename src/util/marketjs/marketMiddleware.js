@@ -73,6 +73,8 @@ const depositCollateralAsync = (amount, str = store) => {
         txParams
       )
       .then(res => {
+        console.log('res', res);
+
         return web3.eth.getTransactionReceiptMined(res).then(function() {
           marketjs
             .depositCollateralAsync(
@@ -112,6 +114,38 @@ const getBalanceAsync = (tokenAddress, toString, str = store) => {
         return res;
     }
   });
+};
+
+/**
+ * @param contractAddress MARKET Contract Address
+ * @param fromBlock Starting Ethereum Block Number(optional)
+ * @param toBlock Ending Ethereum Block Number(optional)
+ * @param userAddress Users address(optional)
+ * @returns Promise<String or BigNumber>
+ **/
+const getCollateralEventsAsync = (
+  contractAddress,
+  fromBlock = 0,
+  toBlock = 'latest',
+  userAddress = null,
+  str = store
+) => {
+  const marketjs = str.getState().marketjs;
+  const web3 = str.getState().web3.web3Instance;
+
+  return marketjs
+    .getCollateralEventsAsync(contractAddress, fromBlock, toBlock, userAddress)
+    .then(transactions => {
+      let parsedTransactions = [];
+
+      transactions.forEach(transaction => {
+        transaction.amount = transaction.amount.toString();
+        transaction.network = web3.web3Instance.version.network;
+        parsedTransactions.push(transaction);
+      });
+
+      return parsedTransactions;
+    });
 };
 
 /**
@@ -259,6 +293,7 @@ export const MarketJS = {
   createSignedOrderAsync,
   depositCollateralAsync,
   getBalanceAsync,
+  getCollateralEventsAsync,
   getContractFillsAsync,
   getUserPositionsAsync,
   getUserUnallocatedCollateralBalanceAsync,
