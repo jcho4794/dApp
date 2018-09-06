@@ -8,7 +8,8 @@ import {
   toBaseUnit,
   fromBaseUnit,
   getEtherscanUrl,
-  copyTextToClipboard
+  copyTextToClipboard,
+  shortenAddress
 } from '../../src/util/utils';
 
 describe('getMetamaskError', () => {
@@ -110,5 +111,13 @@ describe('fromBaseUnit', () => {
 describe('getLocationOrigin', () => {
   it('should return location origin', () => {
     expect(getLocationOrigin()).to.equal(window.location.origin);
+  });
+});
+
+describe('shortenAddress', () => {
+  it('should return location origin', () => {
+    expect(
+      shortenAddress('0x2021c394e8fce5e56c166601a0428e4611147802')
+    ).to.equal('0x2021...7802');
   });
 });

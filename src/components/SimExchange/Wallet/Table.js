@@ -12,6 +12,7 @@ import _ from 'lodash';
   {
     amount: '5000 USD',
     block: '2134123',
+    network: 'rinkeby',
     details: {
       hash: '0xf5b80c91de0a637d881d2e8b2158456fe4b030aeee0c4b062b575e375de160a8'
     },
@@ -122,7 +123,8 @@ class BuyTable extends Component {
                   .toString()} ${simExchange.contract.COLLATERAL_TOKEN_SYMBOL}`,
                 details: {
                   hash: response.blockHash
-                }
+                },
+                network: web3.web3Instance.version.network
               };
 
               fetchedTransactions.push(payload);

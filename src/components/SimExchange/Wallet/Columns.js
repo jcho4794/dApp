@@ -77,7 +77,7 @@ export default [
             <Button
               type="primary"
               className="popover-action"
-              href={`${getEtherscanUrl('rinkeby')}/address/${
+              href={`${getEtherscanUrl(text.network)}/address/${
                 text.details.hash
               }`}
               target={'_blank'}
