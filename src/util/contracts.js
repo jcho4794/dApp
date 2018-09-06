@@ -126,7 +126,6 @@ export async function processAPIContractsList(contracts) {
       PRICE_FLOOR: parseInt(contract.priceFloor, 10),
       PRICE_CAP: parseInt(contract.priceCap, 10),
       PRICE_DECIMAL_PLACES: parseInt(contract.priceDecimalPlaces, 10),
-      // MARKET_COLLATERAL_POOL_ADDRESS: '', // not provided yet
       QTY_MULTIPLIER: parseInt(contract.qtyMultiplier, 10),
       ORACLE_QUERY: contract.oracleQuery,
       EXPIRATION: parseInt(contract.expirationTimestamp, 10),
